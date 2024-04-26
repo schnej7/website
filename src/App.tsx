@@ -2,10 +2,11 @@ import './App.css'
 import Homepage from './components/Homepage.tsx'
 
 function App() {
-
   return (
     <>
-      <Homepage />
+      <div id="APP">
+        <Homepage />
+      </div>
     </>
   )
 }

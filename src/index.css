@@ -13,6 +13,16 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+#APP {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+}
+
 a {
   font-weight: 500;
   color: #646cff;
@@ -47,7 +57,7 @@ button:focus-visible {
 
 @media (prefers-color-scheme: light) {
   :root {
-    color: #213547;
+    color: #18101F;
     background-color: #ffffff;
   }
   a:hover {
@@ -56,4 +66,17 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+}
+
+.flex-spacer {
+  display: flex;
+  flex-grow: 99999;
+}
+
+.card {
+  height: 400px;
+  width: 400px;
+  margin: 300px auto;
+  background-color: red;
+  text-align: center;
 }
