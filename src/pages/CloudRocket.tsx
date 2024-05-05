@@ -1,3 +1,9 @@
+/*
+ * Note:
+ *   This code was ported from a 24hr game jam
+ *   I do not condone the code in this file, nor do I consider it production quality
+ */
+
 import './cloudRocket/CloudRocket.scss';
 import React, { } from "react";
 
