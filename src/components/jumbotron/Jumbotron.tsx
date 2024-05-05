@@ -6,12 +6,10 @@ export default function Jumbotron() {
 
   const handleScroll = () => {
     const app = document.getElementById("APP");
-    console.log(app.scrollTop);
     setIsAtTop(app.scrollTop === 0);
   };
 
   useEffect(() => {
-    console.log('use effect');
     handleScroll();
     const app = document.getElementById("APP");
     app.addEventListener("scroll", handleScroll);

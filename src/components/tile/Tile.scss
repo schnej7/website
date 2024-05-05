@@ -1,0 +1,47 @@
+.tile {
+  display: flex;
+  height: 400px;
+  width: 400px;
+  font-weight: bold;
+  margin: 200px auto 50px;
+  color: #444;
+  background-color: #666;
+  cursor: pointer;
+  text-shadow: 1px 1px #000;
+  border-radius: 2px;
+
+  &:hover {
+    .title {
+      margin-left: -100%;
+      color: #444;
+    }
+
+    .description {
+      color: #fff;
+    }
+  }
+
+  .title,
+  .description {
+    min-height: 90%;
+    min-width: 90%;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    padding: 5%;
+    transition: color 300ms ease-in, margin-left 300ms ease-in-out;
+  }
+
+  .title {
+    font-size: 3rem;
+    pointer-events: none;
+    color: #fff;
+  }
+
+  .description {
+    font-size: 2rem;
+    pointer-events: none;
+  }
+}
