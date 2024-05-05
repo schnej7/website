@@ -5,7 +5,7 @@
  */
 
 import './cloudRocket/CloudRocket.scss';
-import React, { } from "react";
+import React, { useState } from "react";
 
 const new_obj_limit = 1400;
 const new_puff_limit = 8;
@@ -21,7 +21,6 @@ const CLOUDS=[
 const scales = [0.999, 0.998, 0.997, 0.996, 0.995];
 const cloud_nerf_limit = 100000;
 
-let loaded = false;
 let vx = 0;
 let vy = 10;
 let thrust = 1.4;
@@ -307,6 +306,8 @@ const initBurst = () => {
 
 class CloudRocket extends React.Component {
 
+  loaded: false;
+
   addScript(src) {
     const script = document.createElement("script");
     script.src = src;
@@ -314,11 +315,12 @@ class CloudRocket extends React.Component {
   }
 
   componentDidMount() {
-    if (loaded) return;
+    if (this.loaded) return;
 
     this.addScript("/js/cloud-rocket/paper-full.min.js");
     this.addScript("/js/cloud-rocket/jquery.js");
 
+    // TODO: fix this timeout, should run after scripts load rather than hard coded delay
     setTimeout(() => {
       screen_height = $(window).height();
       screen_width = $(window).width();
@@ -411,7 +413,7 @@ class CloudRocket extends React.Component {
 
       indicator = initIndicator();
     }, 100);
-    loaded = true;
+    this.loaded = true;
   }
 
   render() {
