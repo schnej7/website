@@ -417,10 +417,10 @@ class CloudRocket extends React.Component {
           <div className="in_a_row_box shadow" />
           <div className="score" />
           <div className="finalScore hidden shadow">
-						|Score:
+						Score:
 						<span className="getScoreString" />
-						br 
-						|Best:
+            <br />
+						Best:
 						<span className="bestScoreString" />
           </div>
         </div>
