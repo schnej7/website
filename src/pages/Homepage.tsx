@@ -11,7 +11,7 @@ const tiles = [
   },
   {
     title: "Cloud Rocket",
-    description: "Browser endless runner written in javascript using HTML5 canvas",
+    description: "Endless runner written in javascript for a game jam",
     link: {
       path: "cloud-rocket",
     },

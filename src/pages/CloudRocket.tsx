@@ -327,8 +327,8 @@ class CloudRocket extends React.Component {
       next_cloud_x = screen_width/2;
 
       const canvasElem = $('#myCanvas').get(0);
-      canvasElem.setAttribute('height', $(window).height());
-      canvasElem.setAttribute('width', $(window).width());
+      canvasElem.setAttribute('height', screen_height - 6);
+      canvasElem.setAttribute('width', screen_width);
 
       paper.install(window);
       paper.setup('myCanvas');
