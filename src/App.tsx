@@ -4,7 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from './pages/Layout.tsx'
 import Homepage from './pages/Homepage.tsx'
 import WordWizard from './pages/WordWizard.tsx'
-import CloudRocket from './pages/CloudRocket.tsx'
+import CloudRocket from './pages/cloudRocket/CloudRocket.tsx'
 import Chip8Emulator from './pages/Chip8Emulator.tsx'
 
 function App() {

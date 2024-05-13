@@ -4,7 +4,7 @@
  *   I do not condone the code in this file, nor do I consider it production quality
  */
 
-import './cloudRocket/CloudRocket.scss';
+import './CloudRocket.scss';
 import React, { useState } from "react";
 
 const new_obj_limit = 1400;
