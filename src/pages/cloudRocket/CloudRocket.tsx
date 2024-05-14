@@ -5,7 +5,7 @@
  */
 
 import './CloudRocket.scss';
-import React, { useState } from "react";
+import React from "react";
 
 const new_obj_limit = 1400;
 const new_puff_limit = 8;

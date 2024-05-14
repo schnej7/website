@@ -1,7 +1,7 @@
 // This is a chip-8 emulator
 // Written by Jerry Schneider
 
-// Hardcoded fontset for the chip8
+// Hardcoded fontset
 const FONTSET = [
   0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
   0x20, 0x60, 0x20, 0x20, 0x70, // 1
@@ -20,6 +20,26 @@ const FONTSET = [
   0xF0, 0x80, 0xF0, 0x80, 0xF0, // E
   0xF0, 0x80, 0xF0, 0x80, 0x80  // F
 ];
+
+// Hardcoded input keys
+const INPUT_KEY_MAP = {
+  88: 0x0,
+  49: 0x1,
+  50: 0x2,
+  51: 0x3,
+  81: 0x4,
+  87: 0x5,
+  69: 0x6,
+  65: 0x7,
+  83: 0x8,
+  68: 0x9,
+  90: 0xA,
+  67: 0xB,
+  52: 0xC,
+  82: 0xD,
+  70: 0xE,
+  86: 0xF,
+};
 
 class Chip8 {
   private display;
@@ -74,9 +94,13 @@ class Chip8 {
 
   private opcodes = [];
 
+  // Callback for each emulation cycle
+  private onEmulationCycle;
+
   // Init opcodes
-  constructor(display) {
+  constructor(display, onEmulationCycle) {
     this.display = display;
+    this.onEmulationCycle = onEmulationCycle || (() => {});
 
     this.opcodes[0x0000] = {
       exec: (opcode) => {
@@ -226,7 +250,7 @@ class Chip8 {
 
     this.opcodes[0x9000] = {
       exec: (opcode) => {
-        if( this.V[ (0x0F00 & opcode) >> 8 ] !== this.V[ (0x00F0 & opcode) >> 4 ] ){
+        if (this.V[ (0x0F00 & opcode) >> 8 ] !== this.V[ (0x00F0 & opcode) >> 4 ]){
           this.pc += 4;
         } else {
           this.pc += 2;
@@ -380,33 +404,34 @@ class Chip8 {
   }
 
   // Load the fontset into memory at 0x50
-  loadFontset() {
+  private loadFontset() {
     for (let i = 0; i < FONTSET.length; i++) {
       this.memoryView[0x50 + i] = FONTSET[i];
     }
   }
 
-  enableDebug(isEnabled) {
-    this.debug = isEnabled;
-    if (isEnabled) {
-      // TODO: Implement this in react
-      /**
-      for (let i = 0; i < this.V.length; i++) {
-        let regName = "V" + i.toString(16).toUpperCase();
-        document.getElementById( regName ).innerHTML = regName + ": " + this.V[i];
-      }
-      **/
-    }
+  getDebugData() {
+    return {
+      V: this.V,
+      I: this.I,
+      pc: this.pc,
+      stack: this.stack,
+      sp: this.sp,
+    };
   }
 
-  pause(isPaused) {
-    this.paused = isPaused;
-    if (isPaused) {
+  enableDebug(isEnabled) {
+    this.debug = isEnabled;
+  }
+
+  togglePaused() {
+    this.isPaused = !this.isPaused;
+    if (this.isPaused) {
       clearTimeout(this.tick);
     } else {
       this.tick = setTimeout(
         () => {
-          this.emulateCycle()
+          this.emulateCycle();
         },
         this.timeout,
       );
@@ -414,12 +439,12 @@ class Chip8 {
   }
 
   step() {
-    if (this.paused){
+    if (this.isPaused){
       this.emulateCycle();
     }
   }
 
-  initMemory() {
+  private initMemory() {
     //Init 16 8-bit registers
     for (let i = 0; i < 16; i++) {
       this.V[i] = 0;
@@ -442,8 +467,8 @@ class Chip8 {
     this.displayUpdate = true;
 
     //Set all keys to unpressed
-    for (let i = 0; i < 16; i++) {
-      this.keys[i] = 0;
+    for (let i = 0; i < Object.keys(INPUT_KEY_MAP).length; i++) {
+      this.keys[i] = false;
     }
 
     this.waitingForKey = false;
@@ -451,21 +476,15 @@ class Chip8 {
     this.loadFontset();
   }
 
-  updateReg(idx, value) {
+  private updateReg(idx, value) {
     this.V[idx] = value;
-    if (this.debug) {
-      // TODO: Implement in react
-      /**
-      var regName = "V" + idx.toString(16).toUpperCase();
-      document.getElementById( regName ).innerHTML = regName + ": " + value;
-      **/
-    }
   }
 
-  emulateCycle() {
+  private emulateCycle() {
     // Fetch opcode, instructions are 2 bytes long
     const opcode = this.memoryView[this.pc] << 8 | this.memoryView[this.pc+1];
 
+    this.onEmulationCycle();
     if (this.debug) {
       console.log("memory[" + this.pc.toString(16) + "] === " + opcode.toString(16));
     }
@@ -473,7 +492,7 @@ class Chip8 {
     // Decode and execute opcode
     !!this.opcodes[0xF000 & opcode] && this.opcodes[0xF000 & opcode].exec(opcode) || console.log("Unknown Opcode! " + opcode.toString(16));
 
-    if( !this.waitingForKey && !this.paused ){
+    if( !this.waitingForKey && !this.isPaused ){
       // Get input
 
       // Execute next instruction
@@ -486,14 +505,14 @@ class Chip8 {
     }
   }
 
-  emulateCycleSecondHalf(key) {
+  private emulateCycleSecondHalf(key) {
     if (this.waitingForKey) {
       this.updateReg( (0x0F00 & opcode) >> 8, key );
       this.pc += 2;
       this.waitingForKey = false;
     }
 
-    if (!this.paused) {
+    if (!this.isPaused) {
       // Get input
 
       // Execute next instruction
@@ -506,7 +525,7 @@ class Chip8 {
     }
   }
 
-  updateTimers() {
+  private updateTimers() {
     //Update timers
     if (this.delay_timer > 0) {
       this.delay_timer--;
@@ -550,6 +569,31 @@ class Chip8 {
 
     // Emulation loop
     this.emulateCycle();
+  }
+
+  private toUpperCase(key) {
+    return key > 96 ? key -= 32 : key;
+  }
+
+  handleKeyDown(evt) {
+    const key = this.toUpperCase(evt.keyCode || evt.charCode);
+    const keycode = INPUT_KEY_MAP[key];
+    if (keycode !== undefined) {
+      this.keys[keycode] = true;
+      if (this.waitingForKey) {
+        this.emulateCycleSecondHalf(keycode);
+      }
+    } else if (key === 80) {
+      this.isPaused = true;
+    }
+  }
+
+  handleKeyUp(evt) {
+    const key = this.toUpperCase(evt.keyCode || evt.charCode);
+    var keycode = INPUT_KEY_MAP[key];
+    if (keycode !== undefined) {
+      this.keys[keycode] = false;
+    }
   }
 }
 
