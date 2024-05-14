@@ -1,7 +1,7 @@
 import Chip8 from "./Chip8.ts";
 import Display from "./Display.ts";
 import Roms from "./Roms.ts";
-import React, { useEffect } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 
 function Chip8Emulator() {
   const roms = Object.entries(Roms).map(
@@ -10,15 +10,15 @@ function Chip8Emulator() {
       data: val,
     }));;
 
-  const display = new Display(64, 32, 12);
+  const [display, setDisplay] = useState(new Display(64, 32, 12));
   display.fill(0).flush();
 
-  const chip8 = new Chip8(display);
+  const [chip8, setChip8] = useState(new Chip8(display));
   chip8.setTimerRate(60);
   chip8.loadGame(roms[17].data);
 
-  const keyDownHandler = (e) => chip8.handleKeyDown(e);
-  const keyUpHandler = (e) => chip8.handleKeyUp(e);
+  const keyDownHandler = useCallback((e) => chip8.handleKeyDown(e));
+  const keyUpHandler = useCallback((e) => chip8.handleKeyUp(e));
 
   const getRomOptions = () => {
     return roms.map((rom, idx) => (
