@@ -1,73 +1,56 @@
 import Chip8 from "./Chip8.ts";
 import Display from "./Display.ts";
 import Roms from "./Roms.ts";
-import React from "react";
+import React, { useEffect } from "react";
 
-class Chip8Emulator extends React.Component {
+function Chip8Emulator() {
+  const roms = Object.entries(Roms).map(
+    ([key, val]) => ({
+      name: key,
+      data: val,
+    }));;
 
-  private display;
+  const display = new Display(64, 32, 12);
+  display.fill(0).flush();
 
-  private chip8;
+  const chip8 = new Chip8(display);
+  chip8.setTimerRate(60);
+  chip8.loadGame(roms[17].data);
 
-  private roms;
+  const keyDownHandler = (e) => chip8.handleKeyDown(e);
+  const keyUpHandler = (e) => chip8.handleKeyUp(e);
 
-  private keyDownHandler;
-
-  private keyUpHandler;
-
-  constructor(props) {
-    super(props);
-
-    this.roms = Object.entries(Roms).map(
-      ([key, val]) => ({
-        name: key,
-        data: val,
-      }));
-
-    this.display = new Display(64, 32, 12);
-    this.display.fill(0).flush();
-
-    this.chip8 = new Chip8(this.display);
-    this.chip8.setTimerRate(60);
-    this.chip8.loadGame(this.roms[17].data);
-
-    this.keyDownHandler = (e) => this.chip8.handleKeyDown(e);
-    this.keyUpHandler = (e) => this.chip8.handleKeyUp(e);
-  }
-
-  componentDidMount() {
-    document.getElementById('viewport').appendChild(this.display.getContainer());
-    document.addEventListener('keydown', this.keyDownHandler);
-    document.addEventListener('keyup', this.keyUpHandler);
-  }
-
-  componentWillUnmount() {
-    document.removeEventListener('keydown', this.keyDownHandler);
-    document.removeEventListener('keyup', this.keyUpHandler);
-  }
-
-  private getRomOptions() {
-    return this.roms.map((rom, idx) => (
+  const getRomOptions = () => {
+    return roms.map((rom, idx) => (
       <option value={idx} key={rom.name}>{rom.name}</option>
     ));
-  }
+  };
 
-  render() {
-    return (
-      <>
-        <div className="container">
-          <div id="viewport" />
-        </div>
-        <select
-          onChange={e => this.chip8.loadGame(this.roms[e.target.value].data)}
-        >
-          { this.getRomOptions() }
-        </select>
-        <button onClick={() => this.chip8.togglePaused()}>Pause</button>
-        <button onClick={() => this.chip8.step()}>Step</button>
-      </>
-    )
-  }
+  useEffect(() => {
+    document.getElementById('viewport').appendChild(display.getContainer());
+    document.addEventListener('keydown', keyDownHandler);
+    document.addEventListener('keyup', keyUpHandler);
+
+    return () => {
+      document.removeEventListener('keydown', keyDownHandler);
+      document.removeEventListener('keyup', keyUpHandler);
+    };
+  }, []);
+
+  return (
+    <>
+      <div className="container">
+        <div id="viewport" />
+      </div>
+      <select
+        onChange={e => chip8.loadGame(roms[e.target.value].data)}
+      >
+        { getRomOptions() }
+      </select>
+      <button onClick={() => chip8.togglePaused()}>Pause</button>
+      <button onClick={() => chip8.step()}>Step</button>
+    </>
+  );
 }
 
 export default Chip8Emulator
