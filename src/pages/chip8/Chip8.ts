@@ -418,7 +418,7 @@ class Chip8 {
     };
   }
 
-  enableDebug(isEnabled) {
+  setDebug(isEnabled) {
     this.debug = isEnabled;
   }
 

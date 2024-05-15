@@ -9,6 +9,7 @@ function Chip8Emulator() {
   const [chip8, setChip8] = useState(undefined);
   const [isPaused, setIsPaused] = useState(false);
   const [debugData, setDebugData] = useState(undefined);
+  const [showControls, setShowControls] = useState(true);
 
   const updateDebugData = useCallback((c8) => setDebugData(c8.getDebugData()));
   const keyDownHandler = useCallback((e) => chip8.handleKeyDown(e));
@@ -18,6 +19,12 @@ function Chip8Emulator() {
   useEffect(() => {
     setDisplay(new Display(64, 32, 12));
   }, []);
+
+  useEffect(() => {
+    if (chip8) {
+      chip8.setDebug(!showControls);
+    }
+  }, [showControls]);
 
   // Init display and create emulator
   useEffect(() => {
@@ -31,7 +38,7 @@ function Chip8Emulator() {
   useEffect(() => {
     if (chip8) {
       chip8.setTimerRate(60);
-      chip8.loadGame(roms[17].data);
+      chip8.loadGame(roms[0].data);
 
       document.getElementById('viewport').appendChild(display.getContainer());
       document.addEventListener('keydown', keyDownHandler);
@@ -59,11 +66,15 @@ function Chip8Emulator() {
     ));
   };
 
+  const lowerSection = showControls
+    ? <InputControls />
+    : <DebugData data={debugData} />;
+
   return (
     <div className="chip8 d-flex flex-column align-center">
       <h1>Chip8 Emulator</h1>
       <div className="container d-flex">
-        <div id="viewport" />
+        <div id="viewport" className="d-flex" />
       </div>
       <div className="button-row d-flex">
         <select
@@ -83,8 +94,58 @@ function Chip8Emulator() {
           Step
         </button>
       </div>
-      <div className="debug-data d-flex">
-        <DebugData data={debugData} />
+      <div className="tab-row d-flex">
+        <div
+          className={`tab ${showControls ? 'selected' : ''}`}
+          onClick={() => setShowControls(true)}
+        >
+          View Input Controls
+        </div>
+        <div
+          className={`tab ${!showControls ? 'selected' : ''}`}
+          onClick={() => setShowControls(false)}
+        >
+          View Internal Memory
+        </div>
+      </div>
+      <div className="lower-section d-flex">
+        {lowerSection}
+      </div>
+    </div>
+  );
+}
+
+function InputControls() {
+  return (
+    <div className="d-flex">
+      <div className="description">
+        This is a Chip8 Emulator implemented in JavaScript by Jerry Schneider.  The code for this example is available on <a>GitHub</a>.  Use your keyboard (keypad depicted to the right) to provide input to the emulation.
+      </div>
+      <div className="input-controls d-flex flex-column">
+        <div className="row d-flex">
+          <div className="key">1</div>
+          <div className="key">2</div>
+          <div className="key">3</div>
+          <div className="key">4</div>
+        </div>
+        <div className="row d-flex">
+          <div className="key">q</div>
+          <div className="key">w</div>
+          <div className="key">w</div>
+          <div className="key">r</div>
+        </div>
+        <div className="row d-flex">
+          <div className="key">a</div>
+          <div className="key">s</div>
+          <div className="key">d</div>
+          <div className="key">f</div>
+        </div>
+        <div className="row d-flex">
+          <div className="key">z</div>
+          <div className="key">x</div>
+          <div className="key">c</div>
+          <div className="key">v</div>
+        </div>
       </div>
     </div>
   );
@@ -125,7 +186,7 @@ function MemoryValue(props) {
   return (
     <div className="memory-value d-flex">
       <div className="name">{props.name}</div>
-      <div className="value">{props.value}</div>
+      <div className="value">{props.value.toString(16)}</div>
     </div>
   );
 }
