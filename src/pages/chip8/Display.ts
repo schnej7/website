@@ -26,8 +26,8 @@ class Display {
   private buffer = [];
 
   private colorMap = {
-		0: '#000000',
-		1: '#FFFFFF',
+    0: '#000000',
+    1: '#FFFFFF',
   };
 
   private container;
@@ -43,10 +43,10 @@ class Display {
 
     this.length = this.width * this.height;
 
-		this.container = document.createElement('canvas'),
+    this.container = document.createElement('canvas'),
     this.context = this.container.getContext('2d');
-		this.container.width = width * pixelSize;
-		this.container.height = height * pixelSize;
+    this.container.width = width * pixelSize;
+    this.container.height = height * pixelSize;
   }
 
   getContainer() {
@@ -60,7 +60,7 @@ class Display {
     return this;
   }
 
-	flush() {
+  flush() {
     for (let y = 0; y < this.height; y++) {
       for (let x = 0; x < this.width; x++) {
         this.context.fillStyle = this.colorMap[ this.buffer[ y * this.width + x ] ];
@@ -73,12 +73,12 @@ class Display {
       }
     }
     return this;
-	}
+  }
 
-	setPixel(x, y, value) {
-		this.buffer[ (y * this.width + x) % this.length ] = value;
-		return this;
-	}
+  setPixel(x, y, value) {
+    this.buffer[ (y * this.width + x) % this.length ] = value;
+    return this;
+  }
 }
 
 export default Display;
