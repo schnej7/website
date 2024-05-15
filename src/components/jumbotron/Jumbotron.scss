@@ -5,11 +5,14 @@
 .jumbotron-spacer {
   height: 60vh;
 }
+.jumbotron-spacer.no-jumbo {
+  height: 10vh;
+}
 .jumbotron,
 .jumbotron-spacer {
   transition: height 300ms ease-out;
 
-  &.at-top {
+  &.at-top:not(.no-jumbo) {
     height: 75vh;
   }
 }
@@ -24,7 +27,7 @@
   align-items: center;
   border-bottom: 1px solid #a60bff;
 
-  &.at-top .text-wrap {
+  &.at-top:not(.no-jumbo) .text-wrap {
     h1 {
       font-size: max(10vw, 6vh);
       line-height: max(8vw, 5vh);

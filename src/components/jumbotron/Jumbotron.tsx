@@ -1,7 +1,7 @@
 import './Jumbotron.scss';
 import { useEffect, useState } from "react";
 
-export default function Jumbotron() {
+export default function Jumbotron(props) {
   const [ isAtTop, setIsAtTop ] = useState(true);
 
   const handleScroll = () => {
@@ -21,9 +21,11 @@ export default function Jumbotron() {
 
   const atTop = isAtTop ? 'at-top' : '';
 
+  const noJumbo = props.noJumbo ? 'no-jumbo' : '';
+
   return (
     <>
-      <div className={`jumbotron ${atTop}`}>
+      <div className={`jumbotron ${atTop} ${noJumbo}`}>
         <div className="flex-spacer" />
         <div className="text-wrap">
           <div className="rotate-wrap">
@@ -34,7 +36,7 @@ export default function Jumbotron() {
         </div>
         <div className="flex-spacer" />
       </div>
-      <div className={`jumbotron-spacer ${atTop}`} />
+      <div className={`jumbotron-spacer ${atTop} ${noJumbo}`} />
     </>
   )
 }

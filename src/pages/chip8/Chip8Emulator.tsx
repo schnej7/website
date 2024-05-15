@@ -1,3 +1,4 @@
+import Jumbotron from "@components/jumbotron/Jumbotron.tsx";
 import Chip8 from "./Chip8.ts";
 import Display from "./Display.ts";
 import Roms from "./Roms.ts";
@@ -48,7 +49,10 @@ function Chip8Emulator() {
 
     return () => {
       if (chip8) chip8.setPaused(true);
-      document.getElementById('viewport').innerHTML = '';
+      const viewport = document.getElementById('viewport');
+      if (viewport) {
+        viewport.innerHTML = '';
+      }
       document.removeEventListener('keydown', keyDownHandler);
       document.removeEventListener('keyup', keyUpHandler);
     };
@@ -72,6 +76,7 @@ function Chip8Emulator() {
 
   return (
     <div className="chip8 d-flex flex-column align-center">
+      <Jumbotron noJumbo={true} />
       <h1>Chip8 Emulator</h1>
       <div className="container d-flex">
         <div id="viewport" className="d-flex" />
@@ -131,7 +136,7 @@ function InputControls() {
         <div className="row d-flex">
           <div className="key">q</div>
           <div className="key">w</div>
-          <div className="key">w</div>
+          <div className="key">e</div>
           <div className="key">r</div>
         </div>
         <div className="row d-flex">
