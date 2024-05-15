@@ -119,7 +119,7 @@ function InputControls() {
   return (
     <div className="d-flex">
       <div className="description">
-        This is a Chip8 Emulator implemented in JavaScript by Jerry Schneider.  The code for this example is available on <a>GitHub</a>.  Use your keyboard (keypad depicted to the right) to provide input to the emulation.
+        This is a Chip8 Emulator implemented in JavaScript by Jerry Schneider.  The code for this example is available on <a href="https://github.com/schnej7/website/tree/main/src/pages/chip8" target="_blank">GitHub</a>.  Use your keyboard (keypad depicted to the right) to provide input to the emulation.
       </div>
       <div className="input-controls d-flex flex-column">
         <div className="row d-flex">
