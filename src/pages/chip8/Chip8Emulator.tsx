@@ -2,11 +2,13 @@ import Chip8 from "./Chip8.ts";
 import Display from "./Display.ts";
 import Roms from "./Roms.ts";
 import React, { useEffect, useState, useCallback } from "react";
+import "./Chip8.scss";
 
 function Chip8Emulator() {
   const [display, setDisplay] = useState(undefined);
   const [chip8, setChip8] = useState(undefined);
-  const [debugData, setDebugData] = useState({});
+  const [isPaused, setIsPaused] = useState(false);
+  const [debugData, setDebugData] = useState(undefined);
 
   const updateDebugData = useCallback((c8) => setDebugData(c8.getDebugData()));
   const keyDownHandler = useCallback((e) => chip8.handleKeyDown(e));
@@ -58,21 +60,33 @@ function Chip8Emulator() {
   };
 
   return (
-    <>
-      <div className="container">
+    <div className="chip8 d-flex flex-column align-center">
+      <h1>Chip8 Emulator</h1>
+      <div className="container d-flex">
         <div id="viewport" />
       </div>
-      <select
-        onChange={e => chip8.loadGame(roms[e.target.value].data)}
-      >
-        { getRomOptions() }
-      </select>
-      <button onClick={() => chip8.togglePaused()}>Pause</button>
-      <button onClick={() => chip8.step()}>Step</button>
-      <div className="debug-data">
+      <div className="button-row d-flex">
+        <select
+          onChange={e => chip8.loadGame(roms[e.target.value].data)}
+        >
+          { getRomOptions() }
+        </select>
+        <button
+          onClick={() => setIsPaused(chip8.togglePaused())}
+        >
+          { isPaused ? 'Resume' : 'Pause' }
+        </button>
+        <button
+          className={ isPaused ? '' : 'disabled' }
+          onClick={() => chip8.step()}
+        >
+          Step
+        </button>
+      </div>
+      <div className="debug-data d-flex">
         <DebugData data={debugData} />
       </div>
-    </>
+    </div>
   );
 }
 
@@ -80,20 +94,22 @@ function DebugData(props) {
   if (props.data) {
     return (
       <div>
-        <div className="registers d-flex flex-column">
+        <div className="section d-flex flex-column">
           <div className="title">Registers</div>
-          <MemoryValue name="I" value={props.data.I} />
-          <MemoryValue name="pc" value={props.data.pc} />
-          <MemoryValue name="sp" value={props.data.sp} />
-          {props.data.V.map((reg, idx) => (
-            <MemoryValue name={`V${idx}`} value={reg} />
-          ))}
+          <div className="d-flex flex-wrap">
+            <MemoryValue name="I" value={props.data.I} />
+            <MemoryValue name="pc" value={props.data.pc} />
+            <MemoryValue name="sp" value={props.data.sp} />
+            {props.data.V.map((reg, idx) => (
+              <MemoryValue key={`V${idx}`} name={`V${idx}`} value={reg} />
+            ))}
+          </div>
         </div>
-        <div className="stack d-flex flex-column">
+        <div className="section d-flex flex-column">
           <div className="title">Stack</div>
           <div>
             {props.data.stack.map((value, idx) => (
-              <MemoryValue name={`idx-${idx}`} value={value} />
+              <MemoryValue key={`s-${idx}`} name={idx} value={value} />
             ))}
           </div>
         </div>

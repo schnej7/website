@@ -60,11 +60,9 @@ class Display {
     return this;
   }
 
-	flush( _x, _y, w, h ) {
-    var flushHeight = h + _y || this.height;
-    var flushWidth = w + _x || this.width;
-    for (let y = _y || 0; y < flushHeight; y++) {
-      for (let x = _x || 0; x < flushWidth; x++) {
+	flush() {
+    for (let y = 0; y < this.height; y++) {
+      for (let x = 0; x < this.width; x++) {
         this.context.fillStyle = this.colorMap[ this.buffer[ y * this.width + x ] ];
         this.context.fillRect(
           x * this.pixelSize,
@@ -80,10 +78,6 @@ class Display {
 	setPixel(x, y, value) {
 		this.buffer[ (y * this.width + x) % this.length ] = value;
 		return this;
-	}
-
-	getPixel(x, y) {
-		return this.buffer[ (y * this.width + x) % this.length ];
 	}
 }
 

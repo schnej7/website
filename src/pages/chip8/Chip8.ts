@@ -301,13 +301,11 @@ class Chip8 {
               // update the display
               this.display.setPixel((X + vline) % 64, (Y + hline) % 32, bit ? 1 : 0);
               // if the bit was reset, set VF
-              if (bit) {
-                this.updateReg( 0xF, 1 );
-              }
+              bit || this.updateReg( 0xF, 1 );
             }
           }
         }
-        this.display.flush( X, Y, 8, spriteHeight );
+        this.display.flush();
         this.pc += 2;
         return true;
       }
@@ -436,10 +434,12 @@ class Chip8 {
         this.timeout,
       );
     }
+    return this.isPaused;
   }
 
   togglePaused() {
     this.setPaused(!this.isPaused);
+    return this.isPaused;
   }
 
   step() {
@@ -587,8 +587,6 @@ class Chip8 {
       if (this.waitingForKey) {
         this.emulateCycleSecondHalf(keycode);
       }
-    } else if (key === 80) {
-      this.isPaused = true;
     }
   }
 

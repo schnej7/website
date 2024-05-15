@@ -1,0 +1,28 @@
+.chip8 {
+  position: relative;
+  width: calc(12 * 64px);
+  margin: auto auto;
+
+  .button-row {
+    width: 100%;
+    justify-content: space-around;
+  }
+
+  .debug-data {
+
+    .section {
+      margin-top: 20px;
+    }
+
+    .title {
+      font-size: 1.2em;
+    }
+
+    .memory-value {
+      width: calc(20% - 24px);
+      margin: 6px 12px;
+      border-bottom: 1px dashed #333;
+      justify-content: space-between;
+    }
+  }
+}
