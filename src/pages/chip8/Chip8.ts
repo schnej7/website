@@ -424,8 +424,8 @@ class Chip8 {
     this.debug = isEnabled;
   }
 
-  togglePaused() {
-    this.isPaused = !this.isPaused;
+  setPaused(isPaused) {
+    this.isPaused = isPaused;
     if (this.isPaused) {
       clearTimeout(this.tick);
     } else {
@@ -436,6 +436,10 @@ class Chip8 {
         this.timeout,
       );
     }
+  }
+
+  togglePaused() {
+    this.setPaused(!this.isPaused);
   }
 
   step() {
@@ -484,7 +488,7 @@ class Chip8 {
     // Fetch opcode, instructions are 2 bytes long
     const opcode = this.memoryView[this.pc] << 8 | this.memoryView[this.pc+1];
 
-    this.onEmulationCycle();
+    this.onEmulationCycle(this);
     if (this.debug) {
       console.log("memory[" + this.pc.toString(16) + "] === " + opcode.toString(16));
     }

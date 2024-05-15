@@ -13,6 +13,7 @@ export default function Jumbotron() {
     handleScroll();
     const app = document.getElementById("APP");
     app.addEventListener("scroll", handleScroll);
+
     return () => {
       app.removeEventListener("scroll", handleScroll);
     };
