@@ -37,6 +37,7 @@ function Chip8Emulator() {
   // Init emulator
   useEffect(() => {
     if (chip8) {
+      setIsPaused(chip8.getIsPaused());
       chip8.setTimerRate(60);
       chip8.loadGame(roms[0].data);
 

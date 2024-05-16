@@ -422,6 +422,10 @@ class Chip8 {
     this.debug = isEnabled;
   }
 
+  getIsPaused() {
+    return this.isPaused;
+  }
+
   setPaused(isPaused) {
     this.isPaused = isPaused;
     if (this.isPaused) {
