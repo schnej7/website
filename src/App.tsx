@@ -13,9 +13,13 @@ function App() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Homepage />} />
+        </Route>
+        <Route path="/" element={<Layout smallHeader={true} />}>
           <Route path="word-wizard" element={<WordWizard />} />
-          <Route path="cloud-rocket" element={<CloudRocket />} />
           <Route path="chip8-emulator" element={<Chip8Emulator />} />
+        </Route>
+        <Route path="/" element={<Layout noHeader={true} />}>
+          <Route path="cloud-rocket" element={<CloudRocket />} />
         </Route>
       </Routes>
     </BrowserRouter>

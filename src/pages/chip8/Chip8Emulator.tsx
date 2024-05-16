@@ -1,4 +1,3 @@
-import Jumbotron from "@components/jumbotron/Jumbotron.tsx";
 import Chip8 from "./Chip8.ts";
 import Display from "./Display.ts";
 import Roms from "./Roms.ts";
@@ -76,7 +75,6 @@ function Chip8Emulator() {
 
   return (
     <div className="chip8 d-flex flex-column align-center">
-      <Jumbotron noJumbo={true} />
       <h1>Chip8 Emulator</h1>
       <div className="container d-flex">
         <div id="viewport" className="d-flex" />
@@ -160,6 +158,9 @@ function DebugData(props) {
   if (props.data) {
     return (
       <div>
+        <div className="section d-flex">
+          Program memory (opcodes) can be viewed in the browser developer console.
+        </div>
         <div className="section d-flex flex-column">
           <div className="title">Registers</div>
           <div className="d-flex flex-wrap">

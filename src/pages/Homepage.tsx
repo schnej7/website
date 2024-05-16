@@ -3,6 +3,13 @@ import Tile from '@components/tile/Tile'
 
 const tiles = [
   {
+    title: "Chip8 Emulator",
+    description: "Chip8 emulator written in javascript including some fun games",
+    link: {
+      path: "chip8-emulator",
+    },
+  },
+  {
     title: "Word Wizard",
     description: "MMO Word guessing game written in javascript on nodeJS",
     link: {
@@ -14,13 +21,6 @@ const tiles = [
     description: "Endless runner written in javascript for a game jam",
     link: {
       path: "cloud-rocket",
-    },
-  },
-  {
-    title: "Chip8 Emulator",
-    description: "Chip8 emulator written in javascript including some fun games",
-    link: {
-      path: "chip8-emulator",
     },
   },
   {
@@ -42,7 +42,6 @@ const tiles = [
 function Homepage() {
   return (
     <>
-      <Jumbotron />
       <div className="tray">
         { tiles.map((tile, i) => <Tile
           key={i}

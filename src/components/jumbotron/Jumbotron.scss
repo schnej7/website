@@ -2,14 +2,20 @@
   height: 10vh;
   pointer-events: none;
 }
+
 .jumbotron-spacer {
-  height: 60vh;
+  height: 65vh;
+
+  &:not(.no-jumbo) {
+    transition: height 300ms ease-out;
+  }
 }
+
 .jumbotron-spacer.no-jumbo {
-  height: 10vh;
+  height: 0vh;
 }
-.jumbotron,
-.jumbotron-spacer {
+
+.jumbotron {
   transition: height 300ms ease-out;
 
   &.at-top:not(.no-jumbo) {
@@ -17,15 +23,22 @@
   }
 }
 
+.jumbotron-spacer {
+  &.at-top:not(.no-jumbo) {
+    height: 0px;
+  }
+}
+
 .jumbotron {
-  position: fixed;
+  position: sticky;
   top: 0;
   left: 0;
   right: 0;
+  width: 100%;
   display: flex;
-  background-color: #a863ff;
+  background-color: #6AF;
   align-items: center;
-  border-bottom: 1px solid #a60bff;
+  border-bottom: 1px solid #59E;
 
   &.at-top:not(.no-jumbo) .text-wrap {
     h1 {
