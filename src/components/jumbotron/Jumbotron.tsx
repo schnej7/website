@@ -1,4 +1,5 @@
 import './Jumbotron.scss';
+import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 export default function Jumbotron(props) {
@@ -26,17 +27,29 @@ export default function Jumbotron(props) {
   return (
     <>
       <div className={`jumbotron ${atTop} ${noJumbo}`}>
-        <div className="flex-spacer" />
-        <div className="text-wrap">
-          <div className="rotate-wrap">
-            <div className="flex-spacer" />
-            <h2>Software<br />Engineer</h2>
-          </div>
-          <h1>Jerry<br />Schneider</h1>
-        </div>
-        <div className="flex-spacer" />
+        {headerText(noJumbo)}
       </div>
       <div className={`jumbotron-spacer ${atTop} ${noJumbo}`} />
+    </>
+  )
+}
+
+function headerText(noJumbo) {
+  const href = noJumbo ? '/' : undefined;
+  return (
+    <Link className="text-wrap" to={href}>
+      {headerTextContent()}
+    </Link>
+  );
+}
+
+function headerTextContent() {
+  return (
+    <>
+      <div className="rotate-wrap">
+        <h2>Software<br />Engineer</h2>
+      </div>
+      <h1>Jerry<br />Schneider</h1>
     </>
   )
 }

@@ -1,6 +1,10 @@
 .jumbotron {
   height: 10vh;
-  pointer-events: none;
+  justify-content: space-around;
+
+  &:not(.no-jumbo) {
+    pointer-events: none;
+  }
 }
 
 .jumbotron-spacer {
@@ -67,11 +71,13 @@
   }
 
   .text-wrap {
+    color: #000;
     display: flex;
 
     .rotate-wrap {
       display: flex;
       flex-direction: column;
+      justify-content: flex-end;
     }
 
     h1,
