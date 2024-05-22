@@ -1,6 +1,7 @@
 .jumbotron {
   height: 10vh;
   justify-content: space-around;
+  z-index: 1;
 
   &:not(.no-jumbo) {
     pointer-events: none;
