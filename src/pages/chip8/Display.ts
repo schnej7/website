@@ -12,29 +12,30 @@
  *  document.getElementById('screen').appendChild( display.getContainer() );
  *
  */
+type PxVal = (0|1);
 
 class Display {
 
-  private width;
+  private width: number;
 
-  private height;
+  private height: number;
 
-  private length;
+  private length: number;
 
-  private pixelSize;
+  private pixelSize: number;
 
-  private buffer = [];
+  private buffer: PxVal[] = [];
 
   private colorMap = {
     0: '#000000',
     1: '#FFFFFF',
   };
 
-  private container;
+  private container: HTMLCanvasElement;
 
-  private context;
+  private context: CanvasRenderingContext2D | null;
 
-  constructor(width, height, pixelSize) {
+  constructor(width: number, height: number, pixelSize: number) {
     this.width = width;
 
     this.height = height;
@@ -53,7 +54,7 @@ class Display {
     return this.container;
   }
 
-  fill(value) {
+  fill(value: PxVal) {
     for (let i = 0; i < this.length; i++) {
       this.buffer[i] = value;
     }
@@ -63,19 +64,21 @@ class Display {
   flush() {
     for (let y = 0; y < this.height; y++) {
       for (let x = 0; x < this.width; x++) {
-        this.context.fillStyle = this.colorMap[ this.buffer[ y * this.width + x ] ];
-        this.context.fillRect(
-          x * this.pixelSize,
-          y * this.pixelSize,
-          this.pixelSize,
-          this.pixelSize,
-        );
+        if (this.context) {
+          this.context.fillStyle = this.colorMap[ this.buffer[ y * this.width + x ] ];
+          this.context.fillRect(
+            x * this.pixelSize,
+            y * this.pixelSize,
+            this.pixelSize,
+            this.pixelSize,
+          );
+        }
       }
     }
     return this;
   }
 
-  setPixel(x, y, value) {
+  setPixel(x: number, y: number, value: PxVal) {
     this.buffer[ (y * this.width + x) % this.length ] = value;
     return this;
   }
