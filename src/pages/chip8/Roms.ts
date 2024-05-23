@@ -1,9 +1,9 @@
 const KEY_STR = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
 
-const atob = (input) => {
+const atob = (input: string) => {
     let output = "";
-    let chr1, chr2, chr3 = "";
-    let enc1, enc2, enc3, enc4 = "";
+    let chr1, chr2, chr3;
+    let enc1, enc2, enc3, enc4;
     let i = 0;
 
     do {
