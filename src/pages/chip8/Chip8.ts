@@ -24,7 +24,7 @@ const FONTSET = [
 ];
 
 // Hardcoded input keys
-const INPUT_KEY_MAP = {
+const INPUT_KEY_MAP: { [key: number]: number } = {
   88: 0x0,
   49: 0x1,
   50: 0x2,
@@ -558,7 +558,7 @@ class Chip8 {
   }
 
   // Load the game into the emulator memory
-  loadGame(romFile) {
+  loadGame(romFile: string | ArrayBuffer) {
     // Clear existing tick, memory, and screen
     clearTimeout(this.tick);
     this.initMemory();
@@ -570,8 +570,9 @@ class Chip8 {
         this.memoryView[0x200 + i] = romFile.charCodeAt(i);
       }
     } else {
+      const view = new DataView(romFile);
       for (let i = 0; i < romFile.byteLength; i++) {
-        this.memoryView[0x200 + i] = romFile[i];
+        this.memoryView[0x200 + i] = view.getUint8(i);
       }
     }
 
@@ -579,11 +580,11 @@ class Chip8 {
     this.emulateCycle();
   }
 
-  private toUpperCase(key) {
+  private toUpperCase(key: number) {
     return key > 96 ? key -= 32 : key;
   }
 
-  handleKeyDown(evt) {
+  handleKeyDown(evt: KeyboardEvent) {
     const key = this.toUpperCase(evt.keyCode || evt.charCode);
     const keycode = INPUT_KEY_MAP[key];
     if (keycode !== undefined) {
@@ -594,7 +595,7 @@ class Chip8 {
     }
   }
 
-  handleKeyUp(evt) {
+  handleKeyUp(evt: KeyboardEvent) {
     const key = this.toUpperCase(evt.keyCode || evt.charCode);
     var keycode = INPUT_KEY_MAP[key];
     if (keycode !== undefined) {
