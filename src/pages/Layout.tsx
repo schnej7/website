@@ -1,7 +1,12 @@
 import Jumbotron from "@components/jumbotron/Jumbotron.tsx";
 import { Outlet } from "react-router-dom";
 
-const Layout = (props) => {
+type Props = {
+  noHeader?: boolean,
+  smallHeader?: boolean,
+};
+
+const Layout = (props: Props) => {
 
   let header = undefined;
 

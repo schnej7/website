@@ -1,7 +1,19 @@
 import './Tile.scss';
 import { Link } from "react-router-dom";
 
-export default function Tile(props) {
+type TileProps = {
+  title: string;
+  description: string;
+  link: {
+    href: string;
+    path?: undefined;
+  } | {
+    href?: undefined;
+    path: string;
+  },
+};
+
+export default function Tile(props: TileProps) {
 
   const innerTile = (
     <>
@@ -26,7 +38,7 @@ export default function Tile(props) {
 
   return (
     <>
-      <Link className="tile" to={ props.link.path } name={props.link.path} >
+      <Link className="tile" to={ props.link.path! } >
         { innerTile }
       </Link>
     </>

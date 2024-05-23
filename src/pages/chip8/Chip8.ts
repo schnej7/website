@@ -1,6 +1,8 @@
 // This is a chip-8 emulator
 // Written by Jerry Schneider
 
+import Display from './Display.ts';
+
 // Hardcoded fontset
 const FONTSET = [
   0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
@@ -42,16 +44,13 @@ const INPUT_KEY_MAP = {
 };
 
 class Chip8 {
-  private display;
+  private display: Display;
 
   // Print debug messages if true
   private debug = false;
 
   // Pauses emulation if true
-  private paused = false;
-
-  // The current opcode
-  private opcode = undefined;
+  private isPaused = false;
 
   // The timeout between emulation cycles
   private timeout = 0;
@@ -60,10 +59,10 @@ class Chip8 {
   // 0x000-0x1FF - Chip 8 interpreter (contains font set in emu)
   // 0x050-0x0A0 - Used for the built in 4x5 pixel font set (0-F)
   // 0x200-0xFFF - Program ROM and work RAM
-  private memoryView = [];
+  private memoryView: number[] = [];
 
   // Registers
-  private V = [];
+  private V: number[] = [];
 
   // Index register (upper 4 bits are unused)
   private I = 0;
@@ -72,53 +71,57 @@ class Chip8 {
   private pc = 0;
 
   // Pixel Display
-  private pixels = [];
+  private pixels: boolean[] = [];
 
   // Timers which count down from X to 0 at 60hz
   private delay_timer = 0;
   private sound_timer = 0;
 
   // 16 frame stack
-  private stack = [];
+  private stack: number[] = [];
   // Stack pointer
   private sp = 0;
 
   // Key state
-  private keys = [];
-
-  // If the display was updated
-  private displayUpdate = false;
+  private keys: boolean[] = [];
 
   // If the emulator is waiting for input
   private waitingForKey = false;
 
-  private opcodes = [];
+  private tick: ReturnType<typeof setTimeout> | undefined = undefined;
+
+  private eventTimer: ReturnType<typeof setInterval> | undefined = undefined;
+
+  private opcode: number = 0;
+
+  private opcodes: {
+    [key: number]: { exec: (opcode: number) => boolean | undefined },
+  } = {};
 
   // Callback for each emulation cycle
   private onEmulationCycle;
 
   // Init opcodes
-  constructor(display, onEmulationCycle) {
+  constructor(display: Display, onEmulationCycle: (chip8: Chip8) => void) {
     this.display = display;
     this.onEmulationCycle = onEmulationCycle || (() => {});
 
     this.opcodes[0x0000] = {
       exec: (opcode) => {
-        return {
-          0x0000: (opcode) => { // 0x00E0: clear the screen
+        switch(opcode & 0x000F) {
+          case 0x0000: { // 0x00E0: clear the screen
             for (let k = 0; k < this.pixels.length; k++) {
               this.pixels[k] = false;
             }
-            this.displayUpdate = true;
             this.display.fill(0).flush();
             this.pc += 2;
             return true;
-          },
-          0x000E: (opcode ) => { // 0x00EE: return from a subroutine
+          }
+          case 0x000E: { // 0x00EE: return from a subroutine
             this.pc = this.stack[--this.sp] + 2;
             return true;
           }
-        }[ opcode & 0x000F ](opcode);
+        }
       }
     }
 
@@ -188,63 +191,63 @@ class Chip8 {
 
     this.opcodes[0x8000] = {
       exec: (opcode) => {
-        return {
-          0x0000: (opcode) => {
+        switch(0x000F & opcode) {
+          case 0x0000:  {
             this.updateReg( (0x0F00 & opcode) >> 8, this.V[ (0x00F0 & opcode) >> 4 ] );
             this.pc += 2;
             return true;
-          },
-          0x0001: (opcode) => {
+          }
+          case 0x0001: {
             this.updateReg( (0x0F00 & opcode) >> 8, this.V[ (0x0F00 & opcode) >> 8 ] | this.V[ (0x00F0 & opcode) >> 4 ] );
             this.pc += 2;
             return true;
-          },
-          0x0002: (opcode) => {
+          }
+          case 0x0002: {
             this.updateReg( (0x0F00 & opcode) >> 8, this.V[ (0x0F00 & opcode) >> 8 ] & this.V[ (0x00F0 & opcode) >> 4 ] );
             this.pc += 2;
             return true;
-          },
-          0x0003: (opcode) => {
+          }
+          case 0x0003: {
             this.updateReg( (0x0F00 & opcode) >> 8, this.V[ (0x0F00 & opcode) >> 8 ] ^ this.V[ (0x00F0 & opcode) >> 4 ] );
             this.pc += 2;
             return true;
-          },
-          0x0004: (opcode) => {
+          }
+          case 0x0004: {
             this.updateReg( (0x0F00 & opcode) >> 8, this.V[ (0x0F00 & opcode) >> 8 ] + this.V[ (0x00F0 & opcode) >> 4 ] );
             this.updateReg( 0xF, ( this.V[ (0x0F00 & opcode) >> 8 ] & 0x100 ) >> 8 );
             this.updateReg( (0x0F00 & opcode) >> 8, this.V[ (0x0F00 & opcode) >> 8 ] & 0x00FF );
             this.pc += 2;
             return true;
-          },
-          0x0005: (opcode) => {
+          }
+          case 0x0005: {
             this.updateReg( (0x0F00 & opcode) >> 8, this.V[ (0x0F00 & opcode) >> 8 ] + 0x100 );
             this.updateReg( (0x0F00 & opcode) >> 8, this.V[ (0x0F00 & opcode) >> 8 ] - this.V[ (0x00F0 & opcode) >> 4 ] );
             this.updateReg( 0xF, (this.V[ (0x0F00 & opcode) >> 8 ] & 0x100) >> 8 );
             this.updateReg( (0x0F00 & opcode) >> 8, this.V[ (0x0F00 & opcode) >> 8 ] & 0x00FF );
             this.pc += 2;
             return true;
-          },
-          0x0006: (opcode) => {
+          }
+          case 0x0006: {
             this.updateReg( 0xF, this.V[ (0x0F00 & opcode) >> 8 ] & 0x1 );
             this.updateReg( (0x0F00 & opcode) >> 8, this.V[ (0x0F00 & opcode) >> 8 ] >> 1 );
             this.pc += 2;
             return true;
-          },
-          0x0007: (opcode) => {
+          }
+          case 0x0007: {
             this.updateReg( (0x00F0 & opcode) >> 4, this.V[ (0x00F0 & opcode) >> 4 ] + 0x100 );
             this.updateReg( (0x0F00 & opcode) >> 8, this.V[ (0x00F0 & opcode) >> 4 ] - this.V[ (0x0F00 & opcode) >> 8 ] );
             this.updateReg( 0xF, (this.V[ (0x00F0 & opcode) >> 4 ] & 0x100) >> 8 );
             this.updateReg( (0x00F0 & opcode) >> 4, this.V[ (0x00F0 & opcode) >> 4 ] & 0x00FF );
             this.pc += 2;
             return true;
-          },
-          0x000E: (opcode) => {
+          }
+          case 0x000E: {
             this.updateReg( 0xF, this.V[ (0x0F00 & opcode) >> 8 ] & 0x80 ? 0x1 : 0x0 );
             this.updateReg( (0x0F00 & opcode) >> 8, this.V[ (0x0F00 & opcode) >> 8 ] << 1 );
             this.pc += 2;
             return true;
           }
-        }[0x000F & opcode](opcode);
+        }
       }
     }
 
@@ -313,16 +316,16 @@ class Chip8 {
 
     this.opcodes[0xE000] = {
       exec: (opcode) => {
-        return {
-          0x009E: (opcode) => {
+        switch (0x00FF & opcode) {
+          case 0x009E: {
             if (this.keys[ this.V[ (opcode & 0x0F00) >> 8 ] ]) {
               this.pc += 4;
             } else {
               this.pc += 2;
             }
             return true;
-          },
-          0x00A1: (opcode) => {
+          }
+          case 0x00A1: {
             if (!this.keys[ this.V[ (opcode & 0x0F00) >> 8 ] ]) {
               this.pc += 4;
             } else {
@@ -330,33 +333,33 @@ class Chip8 {
             }
             return true;
           }
-        }[ 0x00FF & opcode ](opcode);
+        }
       }
     }
 
     this.opcodes[0xF000] = {
       exec: (opcode) => {
-        return {
-          0x0007: (opcode) => {
+        switch (0x00FF & opcode){
+          case 0x0007: {
             this.updateReg( (0x0F00 & opcode) >> 8, this.delay_timer );
             this.pc += 2;
             return true;
-          },
-          0x000A: (opcode) => {
+          }
+          case 0x000A: {
             this.waitingForKey = true;
             return true;
-          },
-          0x0015: (opcode) => {
+          }
+          case 0x0015: {
             this.delay_timer = this.V[ (0x0F00 & opcode) >> 8 ];
             this.pc += 2;
             return true;
-          },
-          0x0018: (opcode) => {
+          }
+          case 0x0018: {
             this.sound_timer = this.V[ (0x0F00 & opcode) >> 8 ];
             this.pc += 2;
             return true;
-          },
-          0x001E: (opcode) => {
+          }
+          case 0x001E: {
             this.I += this.V[ (0x0F00 & opcode) >> 8 ];
             if (this.I & 0xF000) {
               this.updateReg( 0xF, 1 );
@@ -366,37 +369,37 @@ class Chip8 {
             this.I = this.I & 0x0FFF;
             this.pc += 2;
             return true;
-          },
-          0x0029: (opcode) => {
+          }
+          case 0x0029: {
             this.I = 0x50 + ( this.V[ (0x0F00 & opcode) >> 8 ] * 5 );
             this.pc += 2;
             return true;
-          },
-          0x0033: (opcode) => {
+          }
+          case 0x0033: {
             const VX = this.V[(opcode & 0x0F00) >> 8]
             this.memoryView[this.I]     = Math.floor( VX / 100);
             this.memoryView[this.I + 1] = Math.floor( VX / 10) % 10;
             this.memoryView[this.I + 2] = VX % 10;
             this.pc += 2;
             return true;
-          },
-          0x0055: (opcode) => {
+          }
+          case 0x0055: {
             const X = (opcode & 0x0F00) >> 8;
             for (let i = 0; i <= X; i++ ) {
               this.memoryView[this.I+i] = this.V[i];
             }
             this.pc += 2;
             return true;
-          },
-          0x0065: (opcode) => {
+          }
+          case 0x0065: {
             const X = (opcode & 0x0F00) >> 8;
             for (let i = 0; i <= X; i++) {
               this.updateReg( i, this.memoryView[this.I+i] );
             }
             this.pc += 2;
             return true;
-          },
-        }[ 0x00FF & opcode ](opcode);
+          }
+        }
       }
     };
   }
@@ -418,7 +421,7 @@ class Chip8 {
     };
   }
 
-  setDebug(isEnabled) {
+  setDebug(isEnabled: boolean) {
     this.debug = isEnabled;
   }
 
@@ -426,7 +429,7 @@ class Chip8 {
     return this.isPaused;
   }
 
-  setPaused(isPaused) {
+  setPaused(isPaused: boolean) {
     this.isPaused = isPaused;
     if (this.isPaused) {
       clearTimeout(this.tick);
@@ -462,7 +465,6 @@ class Chip8 {
     this.pc = 0x200;
 
     //Clear memory
-    this.opcode = 0;
     this.stack = [];
     this.sp = 0;
     this.I = 0;
@@ -471,8 +473,6 @@ class Chip8 {
     for (let k = 0; k < 64 * 32; k++) {
       this.pixels[k] = false;
     }
-
-    this.displayUpdate = true;
 
     //Set all keys to unpressed
     for (let i = 0; i < Object.keys(INPUT_KEY_MAP).length; i++) {
@@ -484,21 +484,21 @@ class Chip8 {
     this.loadFontset();
   }
 
-  private updateReg(idx, value) {
+  private updateReg(idx: number, value: number) {
     this.V[idx] = value;
   }
 
   private emulateCycle() {
     // Fetch opcode, instructions are 2 bytes long
-    const opcode = this.memoryView[this.pc] << 8 | this.memoryView[this.pc+1];
+    this.opcode = this.memoryView[this.pc] << 8 | this.memoryView[this.pc+1];
 
     this.onEmulationCycle(this);
     if (this.debug) {
-      console.log("memory[" + this.pc.toString(16) + "] === " + opcode.toString(16));
+      console.log("memory[" + this.pc.toString(16) + "] === " + this.opcode.toString(16));
     }
 
     // Decode and execute opcode
-    !!this.opcodes[0xF000 & opcode] && this.opcodes[0xF000 & opcode].exec(opcode) || console.log("Unknown Opcode! " + opcode.toString(16));
+    !!this.opcodes[0xF000 & this.opcode] && this.opcodes[0xF000 & this.opcode].exec(this.opcode) || console.log("Unknown Opcode! " + this.opcode.toString(16));
 
     if( !this.waitingForKey && !this.isPaused ){
       // Get input
@@ -513,9 +513,9 @@ class Chip8 {
     }
   }
 
-  private emulateCycleSecondHalf(key) {
+  private emulateCycleSecondHalf(key: number) {
     if (this.waitingForKey) {
-      this.updateReg( (0x0F00 & opcode) >> 8, key );
+      this.updateReg( (0x0F00 & this.opcode) >> 8, key );
       this.pc += 2;
       this.waitingForKey = false;
     }
@@ -547,9 +547,9 @@ class Chip8 {
     }
   }
 
-  setTimerRate(hz) {
-    clearInterval( this.event_timer );
-    this.event_timer = setInterval(
+  setTimerRate(hz: number) {
+    clearInterval( this.eventTimer );
+    this.eventTimer = setInterval(
       () => {
         this.updateTimers();
       },
@@ -560,7 +560,7 @@ class Chip8 {
   // Load the game into the emulator memory
   loadGame(romFile) {
     // Clear existing tick, memory, and screen
-    clearTimeout( this.tick );
+    clearTimeout(this.tick);
     this.initMemory();
     this.display.fill(0).flush();
 

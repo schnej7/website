@@ -1,5 +1,4 @@
-import Jumbotron from '@components/jumbotron/Jumbotron'
-import Tile from '@components/tile/Tile'
+import Tile from '@components/tile/Tile.tsx'
 
 const tiles = [
   {
