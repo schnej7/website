@@ -1,19 +1,21 @@
 import Chip8 from "./Chip8.ts";
 import Display from "./Display.ts";
 import Roms from "./Roms.ts";
-import React, { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useRef } from "react";
 import "./Chip8.scss";
 
 function Chip8Emulator() {
-  const [display, setDisplay] = useState(undefined);
-  const [chip8, setChip8] = useState(undefined);
+  const [display, setDisplay] = useState<Display | undefined>(undefined);
+  const [chip8, setChip8] = useState<Chip8 | undefined>(undefined);
   const [isPaused, setIsPaused] = useState(false);
-  const [debugData, setDebugData] = useState(undefined);
+  const [debugData, setDebugData] = useState<any>(undefined);
   const [showControls, setShowControls] = useState(true);
 
-  const updateDebugData = useCallback((c8) => setDebugData(c8.getDebugData()));
-  const keyDownHandler = useCallback((e) => chip8.handleKeyDown(e));
-  const keyUpHandler = useCallback((e) => chip8.handleKeyUp(e));
+  const updateDebugData = (c8: Chip8) => setDebugData(c8.getDebugData());
+  const keyDownHandler = (e: KeyboardEvent) => chip8!.handleKeyDown(e);
+  const keyUpHandler = (e: KeyboardEvent) => chip8!.handleKeyUp(e);
+
+  const viewport = useRef<HTMLDivElement>(null);
 
   // Create display
   useEffect(() => {
@@ -36,12 +38,12 @@ function Chip8Emulator() {
 
   // Init emulator
   useEffect(() => {
-    if (chip8) {
+    if (chip8 && display && viewport.current) {
       setIsPaused(chip8.getIsPaused());
       chip8.setTimerRate(60);
       chip8.loadGame(roms[0].data);
 
-      document.getElementById('viewport').appendChild(display.getContainer());
+      viewport.current.appendChild(display.getContainer());
       document.addEventListener('keydown', keyDownHandler);
       document.addEventListener('keyup', keyUpHandler);
 
@@ -49,9 +51,8 @@ function Chip8Emulator() {
 
     return () => {
       if (chip8) chip8.setPaused(true);
-      const viewport = document.getElementById('viewport');
-      if (viewport) {
-        viewport.innerHTML = '';
+      if (viewport.current) {
+        viewport.current.innerHTML = '';
       }
       document.removeEventListener('keydown', keyDownHandler);
       document.removeEventListener('keyup', keyUpHandler);
@@ -78,22 +79,22 @@ function Chip8Emulator() {
     <div className="chip8 d-flex flex-column align-center">
       <h1>Chip8 Emulator</h1>
       <div className="container d-flex">
-        <div id="viewport" className="d-flex" />
+        <div ref={viewport} className="d-flex" />
       </div>
       <div className="button-row d-flex">
         <select
-          onChange={e => chip8.loadGame(roms[e.target.value].data)}
+          onChange={e => chip8!.loadGame(roms[parseInt(e.target.value)].data)}
         >
           { getRomOptions() }
         </select>
         <button
-          onClick={() => setIsPaused(chip8.togglePaused())}
+          onClick={() => setIsPaused(chip8!.togglePaused())}
         >
           { isPaused ? 'Resume' : 'Pause' }
         </button>
         <button
           className={ isPaused ? '' : 'disabled' }
-          onClick={() => chip8.step()}
+          onClick={() => chip8!.step()}
         >
           Step
         </button>
@@ -155,7 +156,7 @@ function InputControls() {
   );
 }
 
-function DebugData(props) {
+function DebugData(props: any) {
   if (props.data) {
     return (
       <div>
@@ -168,7 +169,7 @@ function DebugData(props) {
             <MemoryValue name="I" value={props.data.I} />
             <MemoryValue name="pc" value={props.data.pc} />
             <MemoryValue name="sp" value={props.data.sp} />
-            {props.data.V.map((reg, idx) => (
+            {props.data.V.map((reg: number, idx: number) => (
               <MemoryValue key={`V${idx}`} name={`V${idx}`} value={reg} />
             ))}
           </div>
@@ -176,8 +177,8 @@ function DebugData(props) {
         <div className="section d-flex flex-column">
           <div className="title">Stack</div>
           <div>
-            {props.data.stack.map((value, idx) => (
-              <MemoryValue key={`s-${idx}`} name={idx} value={value} />
+            {props.data.stack.map((value: number, idx: number) => (
+              <MemoryValue key={`s-${idx}`} name={`${idx}`} value={value} />
             ))}
           </div>
         </div>
@@ -189,7 +190,7 @@ function DebugData(props) {
   );
 }
 
-function MemoryValue(props) {
+function MemoryValue(props: { name: string, value: number }) {
   return (
     <div className="memory-value d-flex">
       <div className="name">{props.name}</div>
