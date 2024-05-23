@@ -4,6 +4,8 @@
  *   I do not condone the code in this file, nor do I consider it production quality
  */
 
+// @ts-nocheck
+
 import './CloudRocket.scss';
 import React from "react";
 
