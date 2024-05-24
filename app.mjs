@@ -1,9 +1,14 @@
 'use strict';
 
-const express = require('express');
-const path = require('path');
+import express from 'express';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import wordWizard from './wordWizard/WordWizard.ts';
+
 const app = express();
-const wordWizard = require('./wordWizard/WordWizard.ts');
+
+const _filename = fileURLToPath(import.meta.url); // get the resolved path to the file
+const _dirname = path.dirname(_filename); // get the name of the directory
 
 app.get('/api/test', function (req, res) {
   wordWizard.handleRequest(req, res);
@@ -19,11 +24,11 @@ app.use((req, res, next) => {
         res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
         res.header('Expires', '-1');
         res.header('Pragma', 'no-cache');
-        res.sendFile(path.join(__dirname, 'client/dist', 'index.html'));
+        res.sendFile(path.join(_dirname, 'client/dist', 'index.html'));
     }
 });
 
-app.use(express.static(path.join(__dirname, './client/dist')));
+app.use(express.static(path.join(_dirname, './client/dist')));
 
 // Start the server
 const PORT = process.env.PORT || 8080;
