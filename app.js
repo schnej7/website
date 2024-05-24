@@ -3,11 +3,10 @@
 const express = require('express');
 const path = require('path');
 const app = express();
+const wordWizard = require('./wordWizard/WordWizard.ts');
 
 app.get('/api/test', function (req, res) {
-  res.send({
-    test: 'val',
-  });
+  wordWizard.handleRequest(req, res);
 });
 
 // This code makes sure that any request that does not matches a static file
