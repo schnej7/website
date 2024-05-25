@@ -11,11 +11,13 @@ class WordWizard {
 
   resetInterval = null;
 
-  getTimeLeft() {
+  intervalStartTime = Date.now();
+
+  getRemainingTime() {
     if (!this.resetInterval) {
       return GAME_RESET_TIME / 1000;
     }
-    return Math.ceil((this.resetInterval._idleStart + this.resetInterval._idleTimeout - Date.now()) / 1000);
+    return Math.ceil((GAME_RESET_TIME - (Date.now() - this.intervalStartTime)) / 1000);
   }
 
   resetGame() {
@@ -32,28 +34,21 @@ class WordWizard {
   }
 
   getNewAnswerWord() {
-    var answerIndex = Math.floor(Math.random() * WordList.length);
-    while( !this.isValidGuess(WordList[answerIndex]) )
-    {
-        answerIndex = Math.floor(Math.random() * WordList.length);
+    let answerIndex = Math.floor(Math.random() * WordList.length);
+    while(!this.isValidGuess(WordList[answerIndex])) {
+      answerIndex = Math.floor(Math.random() * WordList.length);
     }
     return WordList[answerIndex];
   }
 
-  numOccurences(arr, target) {
-    var occ = 0;
-    for (let letter in arr) {
-      if (target == arr[letter]) {
-        occ += 1;
-      }
-    }
-    return occ;
+  numOccurences(word, target) {
+    return word.split("").filter((letter) => letter === target).length;
   };
 
   getWordScore(word) {
-    var score = 0;
-    for (var letter in word) {
-      if (this.numOccurences(this.answer, word[letter]) == 1) {
+    let score = 0;
+    for (let letterIdx in word) {
+      if (this.numOccurences(this.answer, word[letterIdx]) === 1) {
         score += 1;
       }
     }
@@ -61,70 +56,68 @@ class WordWizard {
   }
 
   isValidGuess (guess) {
-    if (guess.length != 5) { return false; }
-    for (var letter in guess) {
-      if (this.numOccurences(guess, guess[letter]) > 1) { return false; }
+    if (guess.length != 5) {
+      return false;
     }
-    for (var oldGuess in this.guesses) {
-      if (this.guesses[oldGuess].word == guess) { return false; }
-      var localOcc = 0;
-      for (var letter in guess) {
-        localOcc += this.numOccurences(this.guesses[oldGuess].word, guess[letter]);
+
+    for (let letterIdx in guess) {
+      if (this.numOccurences(guess, guess[letterIdx]) > 1) {
+        return false;
       }
-      if (localOcc != this.guesses[oldGuess].num) { return false; }
     }
+
+    for (let prevGuessIdx in this.guesses) {
+      const prevGuess = this.guesses[prevGuessIdx];
+      if (prevGuess.word === guess) {
+        return false;
+      }
+
+      let occ = 0;
+      for (let letterIdx in guess) {
+        occ += this.numOccurences(prevGuess.word, guess[letterIdx]);
+      }
+      if (occ != prevGuess.num) {
+        return false;
+      }
+    }
+
     return WordList.indexOf(guess) >= 0;
   }
 
-  makeGuess(guess, user) {
+  makeGuess(guess) {
     if (this.isValidGuess(guess)) {
-      if (this.answer == guess) {
+      if (this.answer === guess) {
         this.resetGame();
-        this.message = user + " got the word " + guess;
-        return "Got it!";
+        this.message = `Someone got the word ${guess}`;
+        return true;
       }
       else {
-        this.guesses.push({word: guess, num: this.getWordScore(guess)});
+        this.guesses.push({ word: guess, num: this.getWordScore(guess) });
         clearInterval(this.resetInterval);
-        this.resetInterval = setInterval(function(){ this.resetGameInactive(); }, GAME_RESET_TIME);
-        return "Accepted";
+        this.intervalStartTime = Date.now();
+        this.resetInterval = setInterval((() => this.resetGameInactive()), GAME_RESET_TIME);
+        return true;
       }
     }
-    else {
-      return "Invalid guess";
-    }
-  }
-
-  getGuesses() {
-    return this.guesses;
+    return false;
   }
 
   reset() {
     this.resetGame();
   }
 
-  getMessage() {
-    return this.message + " Time Left: " + this.getTimeLeft();
+  handleRequest(req, res) {
+    console.log(req.query);
+    if (req.query.guess) {
+      this.makeGuess(req.query.guess, req.query.user);
+    }
+
+    res.send({
+      guesses: this.guesses,
+      message: this.message,
+      timeRemaining: this.getRemainingTime(),
+    });
   }
 }
 
-var w = new WordWizard();
-
-exports.handleRequest = function(req, res) {
-    console.log(req.query);
-    if (!req.query.guess) {
-        res.send({
-            guesses: w.getGuesses(),
-            message: w.getMessage()
-        });
-    }
-    else {
-        var userMessage = w.makeGuess(req.query.guess, req.query.user);
-        res.send({
-            guesses: w.getGuesses(),
-            message: userMessage
-        });
-    }
-}
-
-w.reset();
+export { WordWizard };
