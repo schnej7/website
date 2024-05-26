@@ -29,7 +29,7 @@ class WordWizard {
   }
 
   resetGameInactive() {
-    this.message = "Nobody got "+this.answer+", game reset.";
+    this.message = `Nobody got ${this.answer}, game reset.`;
     this.resetGame();
   }
 
