@@ -1,6 +1,14 @@
 import './WordWizard.scss';
 import { Link } from "react-router-dom";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useReducer } from "react";
+import type {
+  HelperLetters,
+  HelperLettersAction,
+} from './store/HelperLettersStore.ts';
+import {
+  initialHelperLetters,
+  helperLettersReducer,
+} from './store/HelperLettersStore.ts';
 import Guess from './components/Word.tsx';
 import axios from 'axios';
 
@@ -16,6 +24,8 @@ type GameState = {
 };
 
 function WordWizard() {
+  const [helperLetters, dispatchHelperLetters] = useReducer(helperLettersReducer, initialHelperLetters);
+
   const [gameState, setGameState] = useState<GameState>({
     guesses: [],
     message: '',
@@ -64,16 +74,32 @@ function WordWizard() {
         How to play
       </Link>
       <div>
-        <GuessList guesses={gameState.guesses} />
+        <GuessList
+          guesses={gameState.guesses}
+          helperLetters={helperLetters}
+          dispatchHelperLetters={dispatchHelperLetters}
+        />
       </div>
       <input ref={input} onKeyPress={handleInputKeyPress} />
     </div>
   )
 }
 
-function GuessList(props: { guesses: TGuess[] }) {
+function GuessList(
+  props: {
+    guesses: TGuess[];
+    helperLetters: HelperLetters;
+    dispatchHelperLetters: (action: HelperLettersAction) => void;
+  },
+) {
   const renderedGuesses = props.guesses
-    .map((guess: TGuess) => <Guess guess={guess} />);
+    .map((guess: TGuess) =>
+      <Guess
+        guess={guess}
+        helperLetters={props.helperLetters}
+        dispatchHelperLetters={props.dispatchHelperLetters}
+      />
+    );
 
   return (
     <div>

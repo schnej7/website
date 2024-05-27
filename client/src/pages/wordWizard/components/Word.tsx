@@ -1,8 +1,14 @@
 import './Word.scss';
 import { TGuess } from '../WordWizard.tsx';
+import type {
+  HelperLetters,
+  HelperLettersAction,
+} from '../store/HelperLettersStore.ts';
 
 type Props = {
   guess: TGuess;
+  helperLetters: HelperLetters;
+  dispatchHelperLetters: (action: HelperLettersAction) => void;
 };
 
 export default function Guess(props: Props) {
