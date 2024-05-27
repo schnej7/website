@@ -1,0 +1,20 @@
+.guess {
+  display: flex;
+
+  .number,
+  .letter {
+    height: 60px;
+    width: 60px;
+    line-height: 60px;
+    text-align: center;
+    margin: 10px;
+    background-color: #ddd;
+    border-radius: 3px;
+    font-size: 2rem;
+    user-select: none;
+  }
+
+  .number {
+    border-radius: 100%;
+  }
+}

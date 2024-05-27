@@ -106,10 +106,17 @@ class WordWizard {
     this.resetGame();
   }
 
-  handleRequest(req, res) {
-    console.log(req.query);
-    if (req.query.guess) {
-      this.makeGuess(req.query.guess, req.query.user);
+  handleGetRequest(req, res) {
+    res.send({
+      guesses: this.guesses,
+      message: this.message,
+      timeRemaining: this.getRemainingTime(),
+    });
+  }
+
+  handlePostRequest(req, res) {
+    if (req.body.guess) {
+      this.makeGuess(req.body.guess.toLowerCase(), req.query.user);
     }
 
     res.send({

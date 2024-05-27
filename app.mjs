@@ -2,6 +2,7 @@
 
 import express from 'express';
 import path from 'path';
+import morgan from 'morgan';
 import { fileURLToPath } from 'url';
 
 const { WordWizard } = await import('./wordWizard/WordWizard.ts');
@@ -14,8 +15,15 @@ const _dirname = path.dirname(_filename); // get the name of the directory
 const wordWizard = new WordWizard();
 wordWizard.reset();
 
-app.get('/api/test', function (req, res) {
-  wordWizard.handleRequest(req, res);
+app.use(morgan('tiny'));
+app.use(express.json());
+
+app.get('/api/wordWizard', function (req, res) {
+  wordWizard.handleGetRequest(req, res);
+});
+
+app.post('/api/wordWizard', function (req, res) {
+  wordWizard.handlePostRequest(req, res);
 });
 
 // This code makes sure that any request that does not matches a static file
