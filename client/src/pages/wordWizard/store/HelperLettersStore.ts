@@ -1,11 +1,11 @@
 type HelperLetters = {
-  include: Set<string>;
-  exclude: Set<string>;
+  include: { [key: string]: boolean };
+  exclude: { [key: string]: boolean };
 }
 
 const initialHelperLetters = {
-  include: new Set<string>(),
-  exclude: new Set<string>(),
+  include: {},
+  exclude: {},
 };
 
 type HelperLettersAction = {
@@ -19,19 +19,25 @@ const helperLettersReducer = (
 ) => {
   switch (action.type) {
     case "select":
-      if (state.exclude.has(action.letter)) {
-        state.exclude.delete(action.letter);
-      } else {
-        state.include.add(action.letter);
+      if (state.exclude[action.letter]) {
+        delete state.exclude[action.letter];
       }
-      return state;
+      if (state.include[action.letter]) {
+        delete state.include[action.letter];
+      } else {
+        state.include[action.letter] = true;
+      }
+      return { ...state };
     case "de-select":
-      if (state.include.has(action.letter)) {
-        state.exclude.delete(action.letter);
-      } else {
-        state.exclude.add(action.letter);
+      if (state.include[action.letter]) {
+        delete state.include[action.letter];
       }
-      return state
+      if (state.exclude[action.letter]) {
+        delete state.exclude[action.letter];
+      } else {
+        state.exclude[action.letter] = true;
+      }
+      return { ...state };
     default:
       return state;
   }

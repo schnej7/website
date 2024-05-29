@@ -421,7 +421,7 @@ class CloudRocket extends React.Component {
   render() {
     return (
       <>
-        <div className="gameArea">
+        <div className="cloud-rocket">
           <canvas id="myCanvas" height="600" width="1000" />
           <div className="debug" />
           <div className="in_a_row_box shadow" />

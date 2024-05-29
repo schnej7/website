@@ -12,6 +12,17 @@
     border-radius: 3px;
     font-size: 2rem;
     user-select: none;
+    transition: background-color 300ms linear;
+
+    &.correct,
+    &.included {
+      background-color: #9d9;
+    }
+
+    &.incorrect,
+    &.excluded {
+      background-color: #d99;
+    }
   }
 
   .number {
