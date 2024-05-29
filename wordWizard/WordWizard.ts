@@ -88,7 +88,7 @@ class WordWizard {
     if (this.isValidGuess(guess)) {
       if (this.answer === guess) {
         this.resetGame();
-        this.message = `Someone got the word ${guess}`;
+        this.message = `Someone got the word "${guess}"`;
         return true;
       }
       else {

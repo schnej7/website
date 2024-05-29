@@ -29,6 +29,19 @@ function WordWizard() {
     timeRemaining: 300,
   });
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (gameState.guesses.length > 0) {
+        setGameState({
+          ...gameState,
+          timeRemaining: gameState.timeRemaining - 1,
+        });
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [gameState]);
+
   const input = useRef<HTMLInputElement>(null);
 
   const fetchData = async () => {
@@ -57,6 +70,9 @@ function WordWizard() {
   const handleInputKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.charCode === 13) {
       makeGuess();
+      if (input && input.current) {
+        input.current.value = '';
+      }
     }
   }
 
@@ -71,6 +87,8 @@ function WordWizard() {
         How to play
       </Link>
       <div>
+        <div>{gameState.message}</div>
+        <div>{gameState.timeRemaining} seconds remaining</div>
         <HelperLettersContext
           helperLetters={helperLetters}
           dispatchHelperLetters={dispatchHelperLetters}
