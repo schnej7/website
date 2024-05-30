@@ -83,9 +83,6 @@ function WordWizard() {
   return (
     <div className="word-wizard d-flex flex-column align-center">
       <h1>Word Wizard</h1>
-      <Link to='/wordWizard/howToPlay' >
-        How to play
-      </Link>
       <div>
         <div>{gameState.message}</div>
         <div>{gameState.timeRemaining} seconds remaining</div>
@@ -106,6 +103,7 @@ function WordWizard() {
         />
       </div>
       <input ref={input} onKeyPress={handleInputKeyPress} />
+      <Link to='/word-wizard/howToPlay'>How to play</Link>
     </div>
   )
 }
@@ -114,4 +112,4 @@ export type {
   TGuess,
 };
 
-export default WordWizard
+export default WordWizard;
