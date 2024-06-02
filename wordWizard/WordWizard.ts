@@ -23,7 +23,7 @@ class WordWizard {
   resetGame() {
     this.guesses = [];
     this.answer = this.getNewAnswerWord();
-    console.log("New answer:", this.answer);
+    console.log("WORD-WIZARD: New answer:", this.answer);
     clearInterval(this.resetInterval);
     this.resetInterval = null;
   }
@@ -55,7 +55,7 @@ class WordWizard {
     return score;
   }
 
-  isValidGuess (guess) {
+  isValidGuess(guess) {
     if (guess.length != 5) {
       return false;
     }
@@ -102,11 +102,7 @@ class WordWizard {
     return false;
   }
 
-  reset() {
-    this.resetGame();
-  }
-
-  handleGetRequest(req, res) {
+  onGet(req, res) {
     res.send({
       guesses: this.guesses,
       message: this.message,
@@ -114,9 +110,9 @@ class WordWizard {
     });
   }
 
-  handlePostRequest(req, res) {
+  onPost(req, res) {
     if (req.body.guess) {
-      this.makeGuess(req.body.guess.toLowerCase(), req.query.user);
+      this.makeGuess(req.body.guess.toLowerCase());
     }
 
     res.send({

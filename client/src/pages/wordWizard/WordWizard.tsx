@@ -78,6 +78,23 @@ function WordWizard() {
 
   useEffect(() => {
     fetchData();
+
+    const host = location.origin.replace(/^http/, 'ws')
+    const ws = new WebSocket(host);
+
+    ws.onerror = console.error;
+
+    ws.onopen = () => {
+      ws.send('something');
+    };
+
+    ws.onmessage = (data) => {
+      console.log('received: %s', data);
+    };
+
+    return () => {
+      ws.close();
+    };
   }, []);
 
   return (
