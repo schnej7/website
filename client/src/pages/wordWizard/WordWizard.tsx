@@ -79,7 +79,7 @@ function WordWizard() {
   useEffect(() => {
     fetchData();
 
-    const host = location.origin.replace(/^http/, 'ws')
+    const host = `${location.origin.replace(/^http/, 'ws')}/ws`;
     const ws = new WebSocket(host);
 
     ws.onerror = console.error;
