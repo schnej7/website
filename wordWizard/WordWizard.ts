@@ -13,6 +13,12 @@ class WordWizard {
 
   intervalStartTime = Date.now();
 
+  onStateChanged = () => {};
+
+  constructor(onStateChanged) {
+    this.onStateChanged = onStateChanged;
+  }
+
   getRemainingTime() {
     if (!this.resetInterval) {
       return GAME_RESET_TIME / 1000;
@@ -23,7 +29,7 @@ class WordWizard {
   resetGame() {
     this.guesses = [];
     this.answer = this.getNewAnswerWord();
-    console.log("New answer:", this.answer);
+    console.log("WORD-WIZARD: New answer:", this.answer);
     clearInterval(this.resetInterval);
     this.resetInterval = null;
   }
@@ -31,6 +37,7 @@ class WordWizard {
   resetGameInactive() {
     this.message = `Nobody got ${this.answer}, game reset.`;
     this.resetGame();
+    this.onStateChanged(this.getState());
   }
 
   getNewAnswerWord() {
@@ -55,7 +62,7 @@ class WordWizard {
     return score;
   }
 
-  isValidGuess (guess) {
+  isValidGuess(guess) {
     if (guess.length != 5) {
       return false;
     }
@@ -98,31 +105,32 @@ class WordWizard {
         this.resetInterval = setInterval((() => this.resetGameInactive()), GAME_RESET_TIME);
         return true;
       }
+      this.onStateChanged(this.getState());
     }
     return false;
   }
 
-  reset() {
-    this.resetGame();
-  }
-
-  handleGetRequest(req, res) {
-    res.send({
+  getState() {
+    return {
       guesses: this.guesses,
       message: this.message,
       timeRemaining: this.getRemainingTime(),
+    };
+  }
+
+  onGet(req, res) {
+    res.send({
+      ...this.getState(),
     });
   }
 
-  handlePostRequest(req, res) {
+  onPost(req, res) {
     if (req.body.guess) {
-      this.makeGuess(req.body.guess.toLowerCase(), req.query.user);
+      this.makeGuess(req.body.guess.toLowerCase());
     }
 
     res.send({
-      guesses: this.guesses,
-      message: this.message,
-      timeRemaining: this.getRemainingTime(),
+      ...this.getState(),
     });
   }
 }

@@ -78,6 +78,19 @@ function WordWizard() {
 
   useEffect(() => {
     fetchData();
+
+    const host = `${location.origin.replace(/^http/, 'ws')}/ws`;
+    const ws = new WebSocket(host);
+
+    ws.onerror = console.error;
+
+    ws.onmessage = (message) => {
+      setGameState(JSON.parse(message.data));
+    };
+
+    return () => {
+      ws.close();
+    };
   }, []);
 
   return (

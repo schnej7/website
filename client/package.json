@@ -13,14 +13,17 @@
   "dependencies": {
     "@vitejs/plugin-react": "^4.2.1",
     "axios": "^1.7.2",
+    "isomorphic-ws": "^5.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.23.0"
+    "react-router-dom": "^6.23.0",
+    "ws": "^8.17.0"
   },
   "devDependencies": {
     "@types/node": "^20.12.12",
     "@types/react": "^18.2.56",
     "@types/react-dom": "^18.2.19",
+    "@types/ws": "^8.5.10",
     "@typescript-eslint/eslint-plugin": "^7.0.2",
     "@typescript-eslint/parser": "^7.0.2",
     "eslint": "^8.56.0",
