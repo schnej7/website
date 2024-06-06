@@ -84,12 +84,8 @@ function WordWizard() {
 
     ws.onerror = console.error;
 
-    ws.onopen = () => {
-      ws.send('something');
-    };
-
-    ws.onmessage = (data) => {
-      console.log('received: %s', data);
+    ws.onmessage = (message) => {
+      setGameState(JSON.parse(message.data));
     };
 
     return () => {

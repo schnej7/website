@@ -3,7 +3,7 @@
 import express from 'express';
 import path from 'path';
 import morgan from 'morgan';
-import { WebSocketServer } from 'ws';
+import { WebSocketServer, WebSocket } from 'ws';
 import { fileURLToPath } from 'url';
 
 const { WordWizard } = await import('./wordWizard/WordWizard.ts');
@@ -15,7 +15,24 @@ const app = express();
 const _filename = fileURLToPath(import.meta.url); // get the resolved path to the file
 const _dirname = path.dirname(_filename); // get the name of the directory
 
-const wordWizard = new WordWizard();
+let wss = null;
+
+const wordWizard = new WordWizard(
+  ((data) => {
+    if (wss) {
+      const stringData = JSON.stringify(data);
+      wss.clients.forEach((client) => {
+        if (client.readyState === WebSocket.OPEN) {
+          try {
+            client.send(stringData);
+          } catch (e) {
+            console.error(e);
+          }
+        }
+      });
+    }
+  }),
+);
 wordWizard.resetGame();
 
 app.use(morgan('tiny'));
@@ -51,16 +68,13 @@ const httpServer = app.listen(PORT, () => {
   console.log('Press Ctrl+C to quit.');
 });
 
-// const wss = new WebSocketServer({ port: PORT + 1 });
-const wss = new WebSocketServer({ server: httpServer });
-// const wss = new WebSocketServer({ server: app });
+// Start the ws server
+wss = new WebSocketServer({ server: httpServer });
 
 wss.on('connection', (ws) => {
   ws.on('error', console.error);
 
   ws.on('message', (data) => {
-    console.log('received: %s', data);
+    console.log('WS received: %s', data);
   });
-
-  ws.send('something');
 });

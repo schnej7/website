@@ -13,6 +13,12 @@ class WordWizard {
 
   intervalStartTime = Date.now();
 
+  onStateChanged = () => {};
+
+  constructor(onStateChanged) {
+    this.onStateChanged = onStateChanged;
+  }
+
   getRemainingTime() {
     if (!this.resetInterval) {
       return GAME_RESET_TIME / 1000;
@@ -31,6 +37,7 @@ class WordWizard {
   resetGameInactive() {
     this.message = `Nobody got ${this.answer}, game reset.`;
     this.resetGame();
+    this.onStateChanged(this.getState());
   }
 
   getNewAnswerWord() {
@@ -98,15 +105,22 @@ class WordWizard {
         this.resetInterval = setInterval((() => this.resetGameInactive()), GAME_RESET_TIME);
         return true;
       }
+      this.onStateChanged(this.getState());
     }
     return false;
   }
 
-  onGet(req, res) {
-    res.send({
+  getState() {
+    return {
       guesses: this.guesses,
       message: this.message,
       timeRemaining: this.getRemainingTime(),
+    };
+  }
+
+  onGet(req, res) {
+    res.send({
+      ...this.getState(),
     });
   }
 
@@ -116,9 +130,7 @@ class WordWizard {
     }
 
     res.send({
-      guesses: this.guesses,
-      message: this.message,
-      timeRemaining: this.getRemainingTime(),
+      ...this.getState(),
     });
   }
 }
