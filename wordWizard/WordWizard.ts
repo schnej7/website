@@ -96,18 +96,15 @@ class WordWizard {
       if (this.answer === guess) {
         this.resetGame();
         this.message = `Someone got the word "${guess}"`;
-        return true;
       }
       else {
         this.guesses.push({ word: guess, num: this.getWordScore(guess) });
         clearInterval(this.resetInterval);
         this.intervalStartTime = Date.now();
         this.resetInterval = setInterval((() => this.resetGameInactive()), GAME_RESET_TIME);
-        return true;
       }
       this.onStateChanged(this.getState());
     }
-    return false;
   }
 
   getState() {

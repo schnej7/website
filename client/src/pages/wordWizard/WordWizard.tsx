@@ -96,7 +96,7 @@ function WordWizard() {
   return (
     <div className="word-wizard d-flex flex-column align-center">
       <h1>Word Wizard</h1>
-      <div>
+      <div className="info">
         <div>{gameState.message}</div>
         <div>{gameState.timeRemaining} seconds remaining</div>
         <HelperLettersContext
