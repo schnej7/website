@@ -1,4 +1,5 @@
 import Tile, { TileProps } from '@components/tile/Tile.tsx'
+import Blurb, { BlurbProps } from '@components/blurb/Blurb.tsx'
 import bgImgWebsite from '@components/tile/img/website.png'
 import bgImgLinux from '@components/tile/img/linux.png'
 import bgImgChip8 from '@components/tile/img/chip8.png'
@@ -8,7 +9,36 @@ import bgImgRps from '@components/tile/img/rps.png'
 import bgImgLinkedIn from '@components/tile/img/linkedin.jpg'
 import bgImgGithub from '@components/tile/img/github.png'
 
+const blurb: BlurbProps = {
+  header: "Crafting Seamless Front Ends with Code and Curiosity",
+  subheader: "Hi, I'm Jerry — a passionate Front End developer and engineering lead with over a decade of experience building intuitive user interfaces. I’ve led development on React-based Chrome Extensions, real-time Vue apps, and TypeScript-heavy platforms, always with a focus on clean design, performance, and team collaboration. I thrive at the intersection of UI/UX, modern web tech, and lifelong learning.",
+}
+
 const tiles: TileProps[] = [
+  {
+    title: "Word Wizard",
+    description: "Multiplayer word guessing game written in TypeScript using WebSockets",
+    bgImagePath: bgImgWordWizard,
+    link: {
+      path: "word-wizard",
+    },
+  },
+  {
+    title: "Chip8 Emulator",
+    description: "Chip8 emulator written in TypeScript using HTML5 Canvas",
+    bgImagePath: bgImgChip8,
+    link: {
+      path: "chip8-emulator",
+    },
+  },
+  {
+    title: "Cloud Rocket",
+    description: "Endless runner written in javascript for a game jam",
+    bgImagePath: bgImgCloudRocket,
+    link: {
+      path: "cloud-rocket",
+    },
+  },
   {
     title: "`src` for this website!",
     description: "The code behind your current experience",
@@ -23,30 +53,6 @@ const tiles: TileProps[] = [
     bgImagePath: bgImgLinux,
     link: {
       href: "https://github.com/schnej7/dotfiles",
-    },
-  },
-  {
-    title: "Chip8 Emulator",
-    description: "Chip8 emulator written in javascript including some fun games",
-    bgImagePath: bgImgChip8,
-    link: {
-      path: "chip8-emulator",
-    },
-  },
-  {
-    title: "Word Wizard",
-    description: "MMO Word guessing game written in javascript on nodeJS",
-    bgImagePath: bgImgWordWizard,
-    link: {
-      path: "word-wizard",
-    },
-  },
-  {
-    title: "Cloud Rocket",
-    description: "Endless runner written in javascript for a game jam",
-    bgImagePath: bgImgCloudRocket,
-    link: {
-      path: "cloud-rocket",
     },
   },
   {
@@ -79,6 +85,10 @@ function Homepage() {
   return (
     <>
       <div className="tray">
+        <Blurb
+          header={ blurb.header }
+          subheader={ blurb.subheader }
+        />
         {
           tiles.map((tile, i) => 
             <Tile

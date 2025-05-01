@@ -9,7 +9,7 @@
 }
 
 .jumbotron-spacer {
-  height: 65vh;
+  height: 30vh;
 
   &:not(.no-jumbo) {
     transition: height 300ms ease-out;
@@ -49,24 +49,24 @@
     h1 {
       font-size: max(10vw, 6vh);
       line-height: max(8vw, 5vh);
-      text-shadow: 1px 1px rgba(0, 0, 0, 0.2);
+      text-shadow: 1px 0 rgba(0, 0, 0, 0.2);
     }
 
     h2 {
       font-size: max(3vw, 2vh);
       line-height: max(3vw, 2vh);
       letter-spacing: max(0.3vw, 0.4vh);
-      text-shadow: -1px 1px rgba(0, 0, 0, 0.2);
+      text-shadow: 0 1px rgba(0, 0, 0, 0.2);
       transform: rotate(-90deg) translate(30%, 50%);
     }
 
     @media (prefers-color-scheme: light) {
       h1 {
-        text-shadow: -1px -1px rgba(255, 255, 255, 0.2);
+        text-shadow: -1px 0 rgba(255, 255, 255, 0.2);
       }
 
       h2 {
-        text-shadow: 1px -1px rgba(255, 255, 255, 0.2);
+        text-shadow: 0 -1px rgba(255, 255, 255, 0.2);
       }
     }
   }
