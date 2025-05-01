@@ -1,19 +1,27 @@
 import './Tile.scss';
 import { Link } from "react-router-dom";
 
-type TileProps = {
+export type TileProps = {
   title: string;
   description: string;
+  bgImagePath?: string;
   link: {
     href: string;
-    path?: undefined;
+    path?: never;
   } | {
-    href?: undefined;
+    href?: never;
     path: string;
   },
 };
 
 export default function Tile(props: TileProps) {
+
+  const style = props.bgImagePath
+    ? {
+      background: `linear-gradient( rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.9) ), url(${props.bgImagePath})`,
+      backgroundSize: 'cover',
+      backgroundRepeat: 'no-repeat',
+    } : undefined;
 
   const innerTile = (
     <>
@@ -29,7 +37,12 @@ export default function Tile(props: TileProps) {
   if (props.link.href) {
     return (
       <>
-        <a className="tile" href={ props.link.href } target="_blank">
+        <a
+          className="tile"
+          href={ props.link.href }
+          target="_blank"
+          style={ style }
+        >
           { innerTile }
         </a>
       </>
@@ -38,7 +51,11 @@ export default function Tile(props: TileProps) {
 
   return (
     <>
-      <Link className="tile" to={ props.link.path! } >
+      <Link
+        className="tile"
+        to={ props.link.path! }
+        style={ style }
+      >
         { innerTile }
       </Link>
     </>
