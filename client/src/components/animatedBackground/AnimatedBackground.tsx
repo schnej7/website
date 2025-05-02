@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Debouncer from '@util/Debouncer.ts';
+import Debouncer from '@schnej7/debouncer';
 
 import './AnimatedBackground.scss';
 

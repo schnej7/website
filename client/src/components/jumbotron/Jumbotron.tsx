@@ -1,7 +1,7 @@
 import './Jumbotron.scss';
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import Debouncer from "@util/Debouncer";
+import Debouncer from "@schnej7/debouncer";
 
 export default function Jumbotron(props: { noJumbo?: boolean }) {
   const [ isAtTop, setIsAtTop ] = useState(true);
