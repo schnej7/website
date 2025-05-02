@@ -48,8 +48,16 @@ const tiles: TileProps[] = [
     },
   },
   {
-    title: "`.files` linux configurations",
-    description: ".bashrc, .vimrc, .screenrc",
+    title: "Debouncer",
+    description: "Open Source TypeScript function debouncer",
+    bgImagePath: bgImgWebsite,
+    link: {
+      href: "https://www.npmjs.com/package/@schnej7/debouncer",
+    },
+  },
+  {
+    title: "`.files`",
+    description: " linux configurations: .bashrc, .vimrc, .screenrc",
     bgImagePath: bgImgLinux,
     link: {
       href: "https://github.com/schnej7/dotfiles",
