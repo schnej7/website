@@ -43,12 +43,12 @@ type BackgroundPanelProps = {
 };
 
 function BackgroundPanel(props: BackgroundPanelProps) {
-
   const deg = (props.idx % 2 ? -1 : 1) * 2 * (props.idx + 1);
+  const gradPercent = 100 - 20 * (props.idx);
   const topPercent = ((props.scrollY / props.pageHeight) * 100 * props.idx);
 
   const style: React.HTMLAttributes<HTMLDivElement> = {
-    'background-image': `linear-gradient(${deg}deg, #59E 30%, #FFF 30%)`,
+    'background-image': `linear-gradient(${deg}deg, #59E ${gradPercent}%, #FFF ${gradPercent}%)`,
     top: `${topPercent}%`,
   } as React.HTMLAttributes<HTMLDivElement>;
 
