@@ -1,23 +1,25 @@
 import './Jumbotron.scss';
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
+import Debouncer from "@util/Debouncer";
 
 export default function Jumbotron(props: { noJumbo?: boolean }) {
   const [ isAtTop, setIsAtTop ] = useState(true);
 
-  const handleScroll = () => {
-    const app = document.getElementById("APP");
-    setIsAtTop(Boolean(app) && app!.scrollTop === 0);
-  };
-
   useEffect(() => {
-    handleScroll();
+    const handleScrollDebouncer = new Debouncer(() => {
+      const app = document.getElementById("APP");
+      setIsAtTop(Boolean(app) && app!.scrollTop === 0);
+    }, 100);
+
+    const onScroll = () => handleScrollDebouncer.debounce();
+    onScroll();
     const app = document.getElementById("APP");
     if (app) {
-      app.addEventListener("scroll", handleScroll);
+      app.addEventListener("scroll", onScroll);
 
       return () => {
-        app.removeEventListener("scroll", handleScroll);
+        app.removeEventListener("scroll", onScroll);
       };
     }
   }, []);
