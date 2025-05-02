@@ -8,6 +8,7 @@ import bgImgCloudRocket from '@components/tile/img/cloudrocket.gif'
 import bgImgRps from '@components/tile/img/rps.png'
 import bgImgLinkedIn from '@components/tile/img/linkedin.jpg'
 import bgImgGithub from '@components/tile/img/github.png'
+import bgImgNpm from '@components/tile/img/npm.png'
 
 const blurb: BlurbProps = {
   header: "Crafting Seamless Front Ends with Code and Curiosity",
@@ -50,7 +51,7 @@ const tiles: TileProps[] = [
   {
     title: "Debouncer",
     description: "Open Source TypeScript function debouncer",
-    bgImagePath: bgImgWebsite,
+    bgImagePath: bgImgNpm,
     link: {
       href: "https://www.npmjs.com/package/@schnej7/debouncer",
     },
