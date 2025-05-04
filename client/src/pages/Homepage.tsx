@@ -66,18 +66,10 @@ const tiles: TileProps[] = [
   },
   {
     title: "RPS Contest",
-    description: "My AI solutions for an AI vs AI rock, paper, scissors contest",
+    description: "My submissions for an AI rock, paper, scissors contest",
     bgImagePath: bgImgRps,
     link: {
       href: "http://www.rpscontest.com/authorSearch?name=Jerry",
-    },
-  },
-  {
-    title: "LinkedIn",
-    description: "Check out my professional chops",
-    bgImagePath: bgImgLinkedIn,
-    link: {
-      href: "https://www.linkedin.com/in/jerome-schneider-92a59340/",
     },
   },
   {
@@ -86,6 +78,14 @@ const tiles: TileProps[] = [
     bgImagePath: bgImgGithub,
     link: {
       href: "https://github.com/schnej7",
+    },
+  },
+  {
+    title: "LinkedIn",
+    description: "let's connect",
+    bgImagePath: bgImgLinkedIn,
+    link: {
+      href: "https://www.linkedin.com/in/jerome-schneider-92a59340/",
     },
   },
 ];

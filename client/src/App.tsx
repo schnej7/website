@@ -1,6 +1,6 @@
 import './App.scss'
 
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Layout from './pages/Layout.tsx'
 import Homepage from './pages/Homepage.tsx'
 import WordWizard from './pages/wordWizard/WordWizard.tsx'
@@ -23,6 +23,7 @@ function App() {
         <Route path="/" element={<Layout noHeader={true} />}>
           <Route path="cloud-rocket" element={<CloudRocket />} />
         </Route>
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
   )
