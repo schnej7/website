@@ -1,7 +1,13 @@
+.tiles {
+  display: flex;
+  flex-direction: column;
+}
+
 .tile {
   display: flex;
   height: 400px;
   width: 400px;
+  max-width: 80vw;
   font-weight: bold;
   margin: 50px auto 150px;
   color: #59E;
@@ -43,5 +49,34 @@
   .description {
     font-size: 2rem;
     pointer-events: none;
+  }
+}
+
+@media (max-width:1200px) {
+  .tiles {
+    flex-direction: column-reverse;
+  }
+
+  .tile {
+    flex-direction: column;
+    margin-top: 0;
+    margin-bottom: 5vh;
+    justify-content: center;
+
+    &:hover {
+      .title {
+        margin-left: initial;
+        color: #fff;
+      }
+    }
+
+    .title,
+    .description {
+      color: #fff;
+      min-height: initial;
+      min-width: initial;
+      padding: initial;
+      margin: 1vw;
+    }
   }
 }

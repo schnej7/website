@@ -9,7 +9,7 @@
 }
 
 .jumbotron-spacer {
-  height: 30vh;
+  height: 50vh;
 
   &:not(.no-jumbo) {
     transition: height 300ms ease-out;
@@ -100,5 +100,15 @@
       transform: rotate(-90deg) translate(33%, 50%);
     }
 
+  }
+}
+
+@media (max-width:1200px) {
+  .jumbotron-spacer {
+    height: 60vh;
+
+    &:not(.no-jumbo) {
+      transition: height 300ms ease-out;
+    }
   }
 }

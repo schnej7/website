@@ -98,17 +98,19 @@ function Homepage() {
           header={ blurb.header }
           subheader={ blurb.subheader }
         />
-        {
-          tiles.map((tile, i) => 
-            <Tile
-              key={i}
-              title={tile.title}
-              description={tile.description}
-              link={tile.link}
-              bgImagePath={tile.bgImagePath}
-            />
-          )
-        }
+        <div className="tiles">
+          {
+            tiles.map((tile, i) =>
+              <Tile
+                key={i}
+                title={tile.title}
+                description={tile.description}
+                link={tile.link}
+                bgImagePath={tile.bgImagePath}
+              />
+            )
+          }
+        </div>
       </div>
     </>
   )

@@ -19,7 +19,8 @@ export default function Tile(props: TileProps) {
   const style = props.bgImagePath
     ? {
       background: `linear-gradient( rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.9) ), url(${props.bgImagePath})`,
-      backgroundSize: 'cover',
+      backgroundSize: 'contain',
+      backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat',
     } : undefined;
 
