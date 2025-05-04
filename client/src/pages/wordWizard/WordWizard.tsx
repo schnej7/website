@@ -116,7 +116,7 @@ function WordWizard() {
         />
       </div>
       <input ref={input} onKeyPress={handleInputKeyPress} />
-      <Link to='/word-wizard/howToPlay'>How to play</Link>
+      <Link className="tutorialLink" to='/word-wizard/howToPlay'>How to play</Link>
     </div>
   )
 }

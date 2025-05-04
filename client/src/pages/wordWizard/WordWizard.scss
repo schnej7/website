@@ -1,6 +1,13 @@
 .word-wizard {
+  padding: 0 3vw;
+
+  h1 {
+    text-align: center;
+  }
+
   input {
     font-size: 2rem;
+    max-width: 90vw;
   }
 
   .info {
@@ -9,7 +16,11 @@
   }
 
   .tray {
-    width: 800px;
-    margin: 0 auto;
+    max-width: 800px;
+    margin: 1vh auto;
+  }
+
+  .tutorialLink {
+    margin-top: 1vh;
   }
 }

@@ -4,16 +4,17 @@
 
   .number,
   .letter {
-    height: 60px;
-    width: 60px;
-    line-height: 60px;
+    height: min(8vh, 8vw);
+    width: min(8vh, 8vw);
+    line-height: min(8vh, 8vw);
     text-align: center;
     margin: 10px;
     background-color: #ddd;
     border-radius: 3px;
-    font-size: 2rem;
+    font-size: min(5vh, 5vw);
+    -webkit-user-select: none;
     user-select: none;
-    transition: background-color 100ms linear;
+    transition: background-color .1s linear;
 
     &.correct,
     &.included {

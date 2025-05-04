@@ -53,10 +53,6 @@
 }
 
 @media (max-width:1200px) {
-  .tiles {
-    flex-direction: column-reverse;
-  }
-
   .tile {
     flex-direction: column;
     margin-top: 0;
