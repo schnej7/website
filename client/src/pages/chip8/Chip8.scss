@@ -1,6 +1,6 @@
 .chip8 {
   position: relative;
-  width: calc(12 * 64px);
+  max-width: calc(12 * 64px);
   margin: auto auto;
 
   .tab-row,
@@ -12,6 +12,7 @@
 
   canvas {
     border: 3px solid #000;
+    max-width: 90vw;
   }
 
   select {
@@ -38,15 +39,16 @@
   }
 
   .lower-section {
+    padding: 1.5vw;
+
     .description {
-      padding: 0 50px;
+      padding: 0 1vw;
       margin: auto;
     }
 
     .input-controls {
       padding: 20px;
       border: 1px solid #000;
-      font-size: 1.6em;
 
       .row:not(:last-child) {
         border-bottom: 1px solid #000;
@@ -60,6 +62,7 @@
         margin-right: 20px;
       }
     }
+
     .section {
       margin-top: 20px;
     }

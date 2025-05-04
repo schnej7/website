@@ -126,30 +126,32 @@ function InputControls() {
       <div className="description">
         This is a Chip8 Emulator implemented in JavaScript by Jerry Schneider.  The code for this example is available on <a href="https://github.com/schnej7/website/tree/main/client/src/pages/chip8" target="_blank">GitHub</a>.  Use your keyboard (keypad depicted to the right) to provide input to the emulation.
       </div>
-      <div className="input-controls d-flex flex-column">
-        <div className="row d-flex">
-          <div className="key">1</div>
-          <div className="key">2</div>
-          <div className="key">3</div>
-          <div className="key">4</div>
-        </div>
-        <div className="row d-flex">
-          <div className="key">q</div>
-          <div className="key">w</div>
-          <div className="key">e</div>
-          <div className="key">r</div>
-        </div>
-        <div className="row d-flex">
-          <div className="key">a</div>
-          <div className="key">s</div>
-          <div className="key">d</div>
-          <div className="key">f</div>
-        </div>
-        <div className="row d-flex">
-          <div className="key">z</div>
-          <div className="key">x</div>
-          <div className="key">c</div>
-          <div className="key">v</div>
+      <div className="d-flex flex-column">
+        <div className="input-controls">
+          <div className="row d-flex">
+            <div className="key">1</div>
+            <div className="key">2</div>
+            <div className="key">3</div>
+            <div className="key">4</div>
+          </div>
+          <div className="row d-flex">
+            <div className="key">q</div>
+            <div className="key">w</div>
+            <div className="key">e</div>
+            <div className="key">r</div>
+          </div>
+          <div className="row d-flex">
+            <div className="key">a</div>
+            <div className="key">s</div>
+            <div className="key">d</div>
+            <div className="key">f</div>
+          </div>
+          <div className="row d-flex">
+            <div className="key">z</div>
+            <div className="key">x</div>
+            <div className="key">c</div>
+            <div className="key">v</div>
+          </div>
         </div>
       </div>
     </div>
