@@ -5,10 +5,13 @@ import path from 'path';
 import morgan from 'morgan';
 import { WebSocketServer, WebSocket } from 'ws';
 import { fileURLToPath } from 'url';
+import https from 'https';
+import fs from 'fs';
 
 const { WordWizard } = await import('./wordWizard/WordWizard.ts');
 
 const PORT = process.env.PORT || 8080;
+const HTTPS_PORT = process.env.HTTPS_PORT || 8081;
 
 const app = express();
 
@@ -65,7 +68,17 @@ app.use(express.static(path.join(_dirname, './client/dist')));
 // Start the server
 const httpServer = app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
-  console.log('Press Ctrl+C to quit.');
+});
+
+const options = {
+  key: fs.readFileSync(path.join(_dirname, "./website-secrets/ssl/private.key")),
+  cert: fs.readFileSync(path.join(_dirname, "./website-secrets/ssl/jerry-schneider_com.crt")),
+};
+
+const httpsServer = https.createServer(options, app);
+
+httpsServer.listen(HTTPS_PORT, () => {
+  console.log(`App listening on https://localhost:${HTTPS_PORT}`);
 });
 
 // Start the ws server
