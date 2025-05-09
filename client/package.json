@@ -6,7 +6,7 @@
   "scripts": {
     "host-dev": "npm run dev -- --host",
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "tsc && vite build && cp -r ../website-secrets/well-known dist/.well-known",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },

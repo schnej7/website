@@ -1,0 +1,3 @@
+[submodule "website-secrets"]
+	path = website-secrets
+	url = git@github.com:schnej7/website-secrets.git
