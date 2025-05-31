@@ -49,7 +49,15 @@ const tiles: TileProps[] = [
     },
   },
   {
-    title: "Debouncer",
+    title: "better-enum",
+    description: "Java-style enums with methods and fields in TypeScript",
+    bgImagePath: bgImgNpm,
+    link: {
+      href: "https://www.npmjs.com/package/better-enum",
+    },
+  },
+  {
+    title: "debouncer",
     description: "Open Source TypeScript function debouncer",
     bgImagePath: bgImgNpm,
     link: {
